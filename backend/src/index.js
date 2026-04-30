@@ -4,6 +4,8 @@ const cors = require('cors');
 require('dotenv').config();
 
 const supabase = require('./config/supabase');
+const incomeRoutes = require('./routes/income');
+const expensesRoutes = require('./routes/expenses');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,12 +14,13 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Rutas
+app.use('/income', incomeRoutes);
+app.use('/expenses', expensesRoutes);
+
 // Ruta de prueba general
 app.get('/health', (req, res) => {
-    res.json({
-        status: 'ok',
-        message: 'Servidor contable funcionando correctamente'
-    });
+    res.json({ status: 'ok', message: 'Servidor contable funcionando correctamente' });
 });
 
 // Ruta de prueba de conexión a Supabase
