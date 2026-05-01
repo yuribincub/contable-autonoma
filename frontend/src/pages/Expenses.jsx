@@ -53,8 +53,10 @@ export default function Expenses({ session }) {
                 vat_rate: Number(form.vat_rate),
                 deductible_percentage: Number(form.deductible_percentage),
             });
-
             setSuccess(true);
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1500);
             setForm({ date: '', provider: '', concept: '', category: 'software', base_amount: '', vat_rate: 21, deductible_percentage: 100 });
         } catch (error) {
             setError(error.response?.data?.error || 'Error al guardar el gasto');
@@ -151,7 +153,7 @@ export default function Expenses({ session }) {
                 )}
 
                 {error && <p className="form-error">{error}</p>}
-                {success && <p className="alert alert-success">{success}</p>}
+                {success && <p className="alert alert-success">✅ Gasto guardado correctamente</p>}
 
                 <button
                     className="btn btn-success"

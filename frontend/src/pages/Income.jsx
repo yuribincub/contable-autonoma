@@ -1,6 +1,5 @@
 // Página para añadir ingresos
 import { useState } from 'react';
-import { supabase } from '../config/supabase';
 import api from '../config/api';
 
 export default function Income({ session }) {
@@ -32,8 +31,10 @@ export default function Income({ session }) {
                 irpf_rate: Number(form.irpf_rate),
                 client: 'Cliente EEUU',
             });
-
             setSuccess(true);
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1500);
             setForm({ date: '', concept: '', base_amount: '', irpf_rate: 0 });
         } catch (error) {
             setError(error.response?.data?.error || 'Error al guardar el ingreso');
@@ -128,7 +129,7 @@ export default function Income({ session }) {
                 )}
 
                 {error && <p className="form-error">{error}</p>}
-                {success && <p className="alert alert-success">{success}</p>}
+                {success && <p className="alert alert-success">✅ Ingreso guardado correctamente</p>}
 
                 <button
                     className="btn btn-primary"
