@@ -198,6 +198,17 @@ hr {
 -------------------------------------------------- */
 
 .text-primary   { color: var(--text-primary); }
+
+
+/* ===========================================================
+   UTILIDADES GLOBALES
+   =========================================================== */
+
+.loading {
+  padding: var(--space-10);
+  text-align: center;
+  color: var(--text-secondary);
+}
 .text-body      { color: var(--text-body); }
 .text-secondary { color: var(--text-secondary); }
 .text-income    { color: var(--color-accent-600); font-family: var(--font-mono); }

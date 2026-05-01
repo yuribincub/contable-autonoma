@@ -23,7 +23,7 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  if (loading) return <div style={{ padding: 40 }}>Cargando...</div>;
+  if (loading) return <div className="loading">Cargando...</div>;
   if (!session) return <Login />;
 
   // Navegación simple por URL

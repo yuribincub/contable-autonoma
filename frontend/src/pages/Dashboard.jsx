@@ -54,17 +54,17 @@ export default function Dashboard({ session }) {
     };
 
     return (
-        <div style={styles.container}>
+        <div className="dashboard-container">
             {/* Cabecera */}
-            <div style={styles.header}>
-                <h1 style={styles.title}>📊 Contable</h1>
-                <button style={styles.logoutBtn} onClick={handleLogout}>Salir</button>
+            <div className="dashboard-header">
+                <h1 className="dashboard-title">📊 Contable</h1>
+                <button className="btn btn-secondary" onClick={handleLogout}>Salir</button>
             </div>
 
             {/* Selector de trimestre */}
-            <div style={styles.quarterSelector}>
+            <div className="quarter-selector">
                 <select
-                    style={styles.select}
+                    className="form-select"
                     value={selectedQuarter}
                     onChange={e => setSelectedQuarter(Number(e.target.value))}
                 >
@@ -74,7 +74,7 @@ export default function Dashboard({ session }) {
                     <option value={4}>T4 — Oct/Nov/Dic</option>
                 </select>
                 <select
-                    style={styles.select}
+                    className="form-select"
                     value={selectedYear}
                     onChange={e => setSelectedYear(Number(e.target.value))}
                 >
@@ -84,71 +84,71 @@ export default function Dashboard({ session }) {
                 </select>
             </div>
 
-            {loading ? <p style={{ padding: 20 }}>Cargando...</p> : (
+            {loading ? <p className="empty-text">Cargando...</p> : (
                 <>
                     {/* Tarjetas de resumen */}
-                    <div style={styles.cards}>
-                        <div style={styles.card}>
-                            <p style={styles.cardLabel}>Ingresos</p>
-                            <p style={styles.cardValue}>{totalIncome.toFixed(2)} €</p>
+                    <div className="cards-grid">
+                        <div className="card-metric">
+                            <p className="card-metric-label">Ingresos</p>
+                            <p className="card-metric-value">{totalIncome.toFixed(2)} €</p>
                         </div>
-                        <div style={styles.card}>
-                            <p style={styles.cardLabel}>Gastos deducibles</p>
-                            <p style={styles.cardValue}>{totalExpenses.toFixed(2)} €</p>
+                        <div className="card-metric">
+                            <p className="card-metric-label">Gastos deducibles</p>
+                            <p className="card-metric-value">{totalExpenses.toFixed(2)} €</p>
                         </div>
-                        <div style={{ ...styles.card, backgroundColor: profit >= 0 ? '#f0fdf4' : '#fef2f2' }}>
-                            <p style={styles.cardLabel}>Beneficio</p>
-                            <p style={styles.cardValue}>{profit.toFixed(2)} €</p>
+                        <div className={`card-metric ${profit >= 0 ? 'card-profit-positive' : 'card-profit-negative'}`}>
+                            <p className="card-metric-label">Beneficio</p>
+                            <p className="card-metric-value">{profit.toFixed(2)} €</p>
                         </div>
                     </div>
 
                     {/* Modelos fiscales */}
-                    <div style={styles.taxSection}>
-                        <h2 style={styles.sectionTitle}>Modelos fiscales T{selectedQuarter}/{selectedYear}</h2>
-                        <div style={styles.cards}>
-                            <div style={styles.taxCard}>
-                                <p style={styles.taxLabel}>Modelo 130 — IRPF</p>
-                                <p style={styles.taxValue}>{irpf130.toFixed(2)} €</p>
-                                <p style={styles.taxNote}>20% sobre beneficio</p>
+                    <div className="tax-section">
+                        <h2 className="section-title">Modelos fiscales T{selectedQuarter}/{selectedYear}</h2>
+                        <div className="cards-grid">
+                            <div className="tax-card">
+                                <p className="tax-label">Modelo 130 — IRPF</p>
+                                <p className="tax-value">{irpf130.toFixed(2)} €</p>
+                                <p className="tax-note">20% sobre beneficio</p>
                             </div>
-                            <div style={styles.taxCard}>
-                                <p style={styles.taxLabel}>Modelo 303 — IVA</p>
-                                <p style={styles.taxValue}>{vat303.toFixed(2)} €</p>
-                                <p style={styles.taxNote}>IVA soportado a compensar</p>
+                            <div className="tax-card">
+                                <p className="tax-label">Modelo 303 — IVA</p>
+                                <p className="tax-value">{vat303.toFixed(2)} €</p>
+                                <p className="tax-note">IVA soportado a compensar</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Botones de acción */}
-                    <div style={styles.actions}>
-                        <button style={styles.addBtn} onClick={() => window.location.href = '/income'}>
+                    <div className="actions">
+                        <button className="btn btn-primary" onClick={() => window.location.href = '/income'}>
                             + Añadir ingreso
                         </button>
-                        <button style={{ ...styles.addBtn, backgroundColor: '#16a34a' }} onClick={() => window.location.href = '/expenses'}>
+                        <button className="btn btn-success" onClick={() => window.location.href = '/expenses'}>
                             + Añadir gasto
                         </button>
                     </div>
 
                     {/* Últimos movimientos */}
-                    <div style={styles.section}>
-                        <h2 style={styles.sectionTitle}>Últimos ingresos</h2>
-                        {income.length === 0 ? <p style={styles.empty}>No hay ingresos en este trimestre</p> : (
+                    <div className="section">
+                        <h2 className="section-title">Últimos ingresos</h2>
+                        {income.length === 0 ? <p className="empty-text">No hay ingresos en este trimestre</p> : (
                             income.slice(0, 5).map(i => (
-                                <div key={i.id} style={styles.row}>
+                                <div key={i.id} className="list-row">
                                     <span>{i.date} — {i.concept}</span>
-                                    <span style={{ fontWeight: 600 }}>{Number(i.base_amount).toFixed(2)} €</span>
+                                    <span className="mono">{Number(i.base_amount).toFixed(2)} €</span>
                                 </div>
                             ))
                         )}
                     </div>
 
-                    <div style={styles.section}>
-                        <h2 style={styles.sectionTitle}>Últimos gastos</h2>
-                        {expenses.length === 0 ? <p style={styles.empty}>No hay gastos en este trimestre</p> : (
+                    <div className="section">
+                        <h2 className="section-title">Últimos gastos</h2>
+                        {expenses.length === 0 ? <p className="empty-text">No hay gastos en este trimestre</p> : (
                             expenses.slice(0, 5).map(e => (
-                                <div key={e.id} style={styles.row}>
+                                <div key={e.id} className="list-row">
                                     <span>{e.date} — {e.concept}</span>
-                                    <span style={{ fontWeight: 600 }}>{Number(e.total_amount).toFixed(2)} €</span>
+                                    <span className="mono">{Number(e.total_amount).toFixed(2)} €</span>
                                 </div>
                             ))
                         )}
@@ -158,27 +158,3 @@ export default function Dashboard({ session }) {
         </div>
     );
 }
-
-const styles = {
-    container: { maxWidth: 700, margin: '0 auto', padding: 24, fontFamily: 'sans-serif' },
-    header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
-    title: { margin: 0, fontSize: 24 },
-    logoutBtn: { background: 'none', border: '1px solid #ddd', padding: '8px 16px', borderRadius: 8, cursor: 'pointer' },
-    quarterSelector: { display: 'flex', gap: 12, marginBottom: 24 },
-    select: { padding: '8px 12px', borderRadius: 8, border: '1px solid #ddd', fontSize: 14 },
-    cards: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 },
-    card: { backgroundColor: '#f9fafb', padding: 20, borderRadius: 12, textAlign: 'center' },
-    cardLabel: { margin: '0 0 8px', color: '#666', fontSize: 14 },
-    cardValue: { margin: 0, fontSize: 24, fontWeight: 700 },
-    taxSection: { marginBottom: 24 },
-    sectionTitle: { fontSize: 16, fontWeight: 600, marginBottom: 12 },
-    taxCard: { backgroundColor: '#eff6ff', padding: 20, borderRadius: 12, textAlign: 'center' },
-    taxLabel: { margin: '0 0 8px', color: '#1d4ed8', fontSize: 14, fontWeight: 600 },
-    taxValue: { margin: '0 0 4px', fontSize: 24, fontWeight: 700, color: '#1d4ed8' },
-    taxNote: { margin: 0, fontSize: 12, color: '#666' },
-    actions: { display: 'flex', gap: 12, marginBottom: 32 },
-    addBtn: { flex: 1, padding: 14, backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: 8, fontSize: 16, cursor: 'pointer' },
-    section: { marginBottom: 24 },
-    row: { display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid #f0f0f0' },
-    empty: { color: '#999', fontSize: 14 },
-};

@@ -32,31 +32,31 @@ export default function Login() {
     };
 
     return (
-        <div style={styles.container}>
-            <div style={styles.card}>
-                <h1 style={styles.title}>📊 Contable</h1>
-                <p style={styles.subtitle}>Gestión fiscal para autónomos</p>
+        <div className="login-container">
+            <div className="login-card">
+                <h1 className="login-title">📊 Contable</h1>
+                <p className="login-subtitle">Gestión fiscal para autónomos</p>
 
-                <div style={styles.form}>
+                <div className="login-form">
                     <input
-                        style={styles.input}
+                        className="form-input"
                         type="email"
                         placeholder="Email"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                     />
                     <input
-                        style={styles.input}
+                        className="form-input"
                         type="password"
                         placeholder="Contraseña"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                     />
 
-                    {error && <p style={styles.error}>{error}</p>}
+                    {error && <p className="form-error">{error}</p>}
 
                     <button
-                        style={styles.button}
+                        className="btn btn-primary"
                         onClick={handleSubmit}
                         disabled={loading}
                     >
@@ -64,7 +64,7 @@ export default function Login() {
                     </button>
 
                     <button
-                        style={styles.linkButton}
+                        className="btn btn-ghost"
                         onClick={() => setIsRegister(!isRegister)}
                     >
                         {isRegister ? '¿Ya tienes cuenta? Entra aquí' : '¿No tienes cuenta? Regístrate'}
@@ -74,67 +74,3 @@ export default function Login() {
         </div>
     );
 }
-
-const styles = {
-    container: {
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#f5f5f5',
-    },
-    card: {
-        backgroundColor: 'white',
-        padding: '40px',
-        borderRadius: '12px',
-        boxShadow: '0 2px 12px rgba(0,0,0,0.1)',
-        width: '100%',
-        maxWidth: '380px',
-    },
-    title: {
-        margin: 0,
-        fontSize: '28px',
-        textAlign: 'center',
-        color: '#1a1a1a',
-    },
-    subtitle: {
-        textAlign: 'center',
-        color: '#666',
-        marginBottom: '32px',
-    },
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '12px',
-    },
-    input: {
-        padding: '12px',
-        borderRadius: '8px',
-        border: '1px solid #ddd',
-        fontSize: '16px',
-        outline: 'none',
-    },
-    button: {
-        padding: '12px',
-        borderRadius: '8px',
-        border: 'none',
-        backgroundColor: '#2563eb',
-        color: 'white',
-        fontSize: '16px',
-        cursor: 'pointer',
-        marginTop: '8px',
-    },
-    linkButton: {
-        background: 'none',
-        border: 'none',
-        color: '#2563eb',
-        cursor: 'pointer',
-        fontSize: '14px',
-        textAlign: 'center',
-    },
-    error: {
-        color: '#dc2626',
-        fontSize: '14px',
-        textAlign: 'center',
-    }
-};
