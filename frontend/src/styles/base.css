@@ -7,7 +7,9 @@
    Reset moderno
 -------------------------------------------------- */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -37,7 +39,12 @@ body {
    Tipografía base
 -------------------------------------------------- */
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-sans);
   color: var(--text-primary);
   font-weight: var(--font-bold);
@@ -65,7 +72,8 @@ h4 {
   font-weight: var(--font-semibold);
 }
 
-h5, h6 {
+h5,
+h6 {
   font-size: var(--text-base);
   font-weight: var(--font-semibold);
 }
@@ -98,7 +106,10 @@ a:hover {
    Elementos de formulario — reset base
 -------------------------------------------------- */
 
-button, input, select, textarea {
+button,
+input,
+select,
+textarea {
   font-family: var(--font-sans);
   font-size: var(--text-base);
   color: inherit;
@@ -110,7 +121,9 @@ button {
   background: none;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   background: var(--bg-surface);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-sm);
@@ -120,7 +133,9 @@ input, textarea, select {
     box-shadow var(--transition-fast);
 }
 
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
   border-color: var(--border-focus);
   box-shadow: 0 0 0 3px var(--color-brand-50);
 }
@@ -129,7 +144,9 @@ input:focus, textarea:focus, select:focus {
    Imágenes y media
 -------------------------------------------------- */
 
-img, svg, video {
+img,
+svg,
+video {
   display: block;
   max-width: 100%;
 }
@@ -138,7 +155,8 @@ img, svg, video {
    Listas
 -------------------------------------------------- */
 
-ul, ol {
+ul,
+ol {
   list-style: none;
 }
 
@@ -197,7 +215,9 @@ hr {
    Utilidades de texto globales
 -------------------------------------------------- */
 
-.text-primary   { color: var(--text-primary); }
+.text-primary {
+  color: var(--text-primary);
+}
 
 
 /* ===========================================================
@@ -209,21 +229,60 @@ hr {
   text-align: center;
   color: var(--text-secondary);
 }
-.text-body      { color: var(--text-body); }
-.text-secondary { color: var(--text-secondary); }
-.text-income    { color: var(--color-accent-600); font-family: var(--font-mono); }
-.text-expense   { color: var(--color-error-700); font-family: var(--font-mono); }
-.text-brand     { color: var(--color-brand-500); }
 
-.text-xs   { font-size: var(--text-xs); }
-.text-sm   { font-size: var(--text-sm); }
-.text-base { font-size: var(--text-base); }
-.text-lg   { font-size: var(--text-lg); }
-.text-xl   { font-size: var(--text-xl); }
+.text-body {
+  color: var(--text-body);
+}
 
-.font-normal   { font-weight: var(--font-normal); }
-.font-semibold { font-weight: var(--font-semibold); }
-.font-bold     { font-weight: var(--font-bold); }
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-income {
+  color: var(--color-accent-600);
+  font-family: var(--font-mono);
+}
+
+.text-expense {
+  color: var(--color-error-700);
+  font-family: var(--font-mono);
+}
+
+.text-brand {
+  color: var(--color-brand-500);
+}
+
+.text-xs {
+  font-size: var(--text-xs);
+}
+
+.text-sm {
+  font-size: var(--text-sm);
+}
+
+.text-base {
+  font-size: var(--text-base);
+}
+
+.text-lg {
+  font-size: var(--text-lg);
+}
+
+.text-xl {
+  font-size: var(--text-xl);
+}
+
+.font-normal {
+  font-weight: var(--font-normal);
+}
+
+.font-semibold {
+  font-weight: var(--font-semibold);
+}
+
+.font-bold {
+  font-weight: var(--font-bold);
+}
 
 .label-tag {
   font-size: var(--text-xs);
@@ -244,7 +303,7 @@ hr {
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0,0,0,0);
+  clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
 }

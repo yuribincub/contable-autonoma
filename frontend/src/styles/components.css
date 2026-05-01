@@ -131,7 +131,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 
@@ -324,11 +326,30 @@
 }
 
 /* Badges de estado del negocio */
-.badge-pagado   { background: var(--bg-success); color: var(--color-success-700); }
-.badge-pendiente{ background: var(--bg-warning);  color: var(--color-warning-700); }
-.badge-borrador { background: var(--bg-surface-alt); color: var(--text-secondary); }
-.badge-revision { background: var(--bg-info);    color: var(--color-info-700); }
-.badge-archivado{ background: var(--bg-surface-alt); color: var(--text-secondary); }
+.badge-pagado {
+  background: var(--bg-success);
+  color: var(--color-success-700);
+}
+
+.badge-pendiente {
+  background: var(--bg-warning);
+  color: var(--color-warning-700);
+}
+
+.badge-borrador {
+  background: var(--bg-surface-alt);
+  color: var(--text-secondary);
+}
+
+.badge-revision {
+  background: var(--bg-info);
+  color: var(--color-info-700);
+}
+
+.badge-archivado {
+  background: var(--bg-surface-alt);
+  color: var(--text-secondary);
+}
 
 
 /* ===========================================================
@@ -431,9 +452,17 @@
   gap: var(--space-1);
 }
 
-.trend-up   { color: var(--color-accent-600); }
-.trend-down { color: var(--color-error-500); }
-.trend-neutral { color: var(--text-secondary); }
+.trend-up {
+  color: var(--color-accent-600);
+}
+
+.trend-down {
+  color: var(--color-error-500);
+}
+
+.trend-neutral {
+  color: var(--text-secondary);
+}
 
 
 /* ===========================================================
@@ -574,8 +603,13 @@
   font-weight: 500;
 }
 
-.table td.amount-income { color: var(--color-accent-600); }
-.table td.amount-expense { color: var(--color-error-700); }
+.table td.amount-income {
+  color: var(--color-accent-600);
+}
+
+.table td.amount-expense {
+  color: var(--color-error-700);
+}
 
 
 /* ===========================================================
@@ -658,8 +692,17 @@
   object-fit: cover;
 }
 
-.avatar-sm { width: 28px; height: 28px; font-size: var(--text-xs); }
-.avatar-lg { width: 48px; height: 48px; font-size: var(--text-lg); }
+.avatar-sm {
+  width: 28px;
+  height: 28px;
+  font-size: var(--text-xs);
+}
+
+.avatar-lg {
+  width: 48px;
+  height: 48px;
+  font-size: var(--text-lg);
+}
 
 
 /* ===========================================================
@@ -667,25 +710,39 @@
    =========================================================== */
 
 @keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--color-gray-100) 25%,
-    var(--color-gray-50) 50%,
-    var(--color-gray-100) 75%
-  );
+  background: linear-gradient(90deg,
+      var(--color-gray-100) 25%,
+      var(--color-gray-50) 50%,
+      var(--color-gray-100) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius-sm);
 }
 
-.skeleton-text  { height: 14px; width: 100%; }
-.skeleton-title { height: 20px; width: 60%; }
-.skeleton-amount{ height: 32px; width: 40%; }
+.skeleton-text {
+  height: 14px;
+  width: 100%;
+}
+
+.skeleton-title {
+  height: 20px;
+  width: 60%;
+}
+
+.skeleton-amount {
+  height: 32px;
+  width: 40%;
+}
 
 
 /* ===========================================================

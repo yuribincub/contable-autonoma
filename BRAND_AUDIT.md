@@ -16,59 +16,59 @@
 ---
 
 ### 2. **SISTEMA DE TOKENS** ✅ (CON AJUSTE)
-| Categoría | Estado | Notas |
-|-----------|--------|-------|
-| Colores | ✅ | Todos los colores de marca implementados |
-| Tipografía | ✅ | DM Sans + DM Mono correctamente importados |
-| Espaciado | ✅ AJUSTADO | Agregado `--space-1-5: 6px` faltante |
-| Radios | ✅ | 4 niveles: sm, md, lg, pill |
-| Sombras | ✅ AJUSTADO | Ahora usa `var(--shadow-brand)` en botones |
-| Transiciones | ✅ | 3 velocidades: fast, normal, slow |
-| Z-index | ✅ | Stack correcto: dropdown → sidebar → modal → toast |
+| Categoría    | Estado     | Notas                                              |
+| ------------ | ---------- | -------------------------------------------------- |
+| Colores      | ✅          | Todos los colores de marca implementados           |
+| Tipografía   | ✅          | DM Sans + DM Mono correctamente importados         |
+| Espaciado    | ✅ AJUSTADO | Agregado `--space-1-5: 6px` faltante               |
+| Radios       | ✅          | 4 niveles: sm, md, lg, pill                        |
+| Sombras      | ✅ AJUSTADO | Ahora usa `var(--shadow-brand)` en botones         |
+| Transiciones | ✅          | 3 velocidades: fast, normal, slow                  |
+| Z-index      | ✅          | Stack correcto: dropdown → sidebar → modal → toast |
 
 ---
 
 ### 3. **COMPONENTES UI** ✅
 
 #### Botones
-| Variante | Status | Implementado |
-|----------|--------|--------------|
-| `.btn-primary` | ✅ | Azul CUADRA con sombra de marca |
-| `.btn-secondary` | ✅ | Fondo gris claro |
-| `.btn-ghost` | ✅ | Sin fondo, solo hover |
-| `.btn-danger` | ✅ AJUSTADO | Rojo + color de texto correcto |
-| `.btn-success` | ✅ AJUSTADO | Verde + color de texto correcto |
-| Tamaños (sm, lg) | ✅ | Variantes de tamaño |
-| Estados (hover, disabled) | ✅ | Transiciones y feedback visual |
+| Variante                  | Status     | Implementado                    |
+| ------------------------- | ---------- | ------------------------------- |
+| `.btn-primary`            | ✅          | Azul CUADRA con sombra de marca |
+| `.btn-secondary`          | ✅          | Fondo gris claro                |
+| `.btn-ghost`              | ✅          | Sin fondo, solo hover           |
+| `.btn-danger`             | ✅ AJUSTADO | Rojo + color de texto correcto  |
+| `.btn-success`            | ✅ AJUSTADO | Verde + color de texto correcto |
+| Tamaños (sm, lg)          | ✅          | Variantes de tamaño             |
+| Estados (hover, disabled) | ✅          | Transiciones y feedback visual  |
 
 #### Inputs & Formularios
-| Componente | Status |
-|-----------|--------|
-| `.form-input` | ✅ Borde 1px, focus con box-shadow |
-| `.form-select` | ✅ Ícono personalizado |
-| `.form-textarea` | ✅ Altura mínima, resize |
-| `.form-group` | ✅ Espaciado entre campos |
-| `.form-label` | ✅ Tipografía correcta |
-| `.form-hint` | ✅ Texto secundario |
-| Estados (error, success) | ✅ Validación visual |
+| Componente               | Status                            |
+| ------------------------ | --------------------------------- |
+| `.form-input`            | ✅ Borde 1px, focus con box-shadow |
+| `.form-select`           | ✅ Ícono personalizado             |
+| `.form-textarea`         | ✅ Altura mínima, resize           |
+| `.form-group`            | ✅ Espaciado entre campos          |
+| `.form-label`            | ✅ Tipografía correcta             |
+| `.form-hint`             | ✅ Texto secundario                |
+| Estados (error, success) | ✅ Validación visual               |
 
 #### Cards & Contenedores
-| Componente | Status |
-|-----------|--------|
-| `.card` | ✅ Borde sutil, padding |
-| `.card-metric` | ✅ Diseño para KPIs |
-| `.card-profit-positive` | ✅ Fondo success |
-| `.card-profit-negative` | ✅ Fondo error |
+| Componente              | Status                 |
+| ----------------------- | ---------------------- |
+| `.card`                 | ✅ Borde sutil, padding |
+| `.card-metric`          | ✅ Diseño para KPIs     |
+| `.card-profit-positive` | ✅ Fondo success        |
+| `.card-profit-negative` | ✅ Fondo error          |
 
 #### Badges & Estados
-| Componente | Status | Colores |
-|-----------|--------|---------|
-| `.badge-success` | ✅ | Verde |
-| `.badge-error` | ✅ | Rojo |
-| `.badge-warning` | ✅ | Ámbar |
-| `.badge-info` | ✅ | Azul |
-| `.badge-neutral` | ✅ | Gris |
-| `.badge-brand` | ✅ | Azul brand |
+| Componente       | Status | Colores    |
+| ---------------- | ------ | ---------- |
+| `.badge-success` | ✅      | Verde      |
+| `.badge-error`   | ✅      | Rojo       |
+| `.badge-warning` | ✅      | Ámbar      |
+| `.badge-info`    | ✅      | Azul       |
+| `.badge-neutral` | ✅      | Gris       |
+| `.badge-brand`   | ✅      | Azul brand |
 
 #### Tablas
 - ✅ `.table` - Layout responsive
@@ -77,13 +77,13 @@
 - ✅ Estados income/expense con colores
 
 #### Alertas & Notificaciones
-| Tipo | Status |
-|------|--------|
-| `.alert` | ✅ Flex con ícono |
+| Tipo             | Status                |
+| ---------------- | --------------------- |
+| `.alert`         | ✅ Flex con ícono      |
 | `.alert-success` | ✅ Fondo + borde verde |
-| `.alert-error` | ✅ Fondo + borde rojo |
+| `.alert-error`   | ✅ Fondo + borde rojo  |
 | `.alert-warning` | ✅ Fondo + borde ámbar |
-| `.alert-info` | ✅ Fondo + borde azul |
+| `.alert-info`    | ✅ Fondo + borde azul  |
 
 #### Otros Componentes
 - ✅ `.avatar` - Diseño circular con iniciales
@@ -216,14 +216,14 @@ Aplicado correctamente en:
 
 ## ✅ CONFORMIDAD FINAL
 
-| Aspecto | Cumplimiento |
-|---------|--------------|
-| Colores | 100% ✅ |
-| Tipografía | 100% ✅ |
-| Componentes | 100% ✅ |
-| Espacios | 100% ✅ |
-| Interacciones | 100% ✅ |
-| **TOTAL** | **100% ✅** |
+| Aspecto       | Cumplimiento |
+| ------------- | ------------ |
+| Colores       | 100% ✅       |
+| Tipografía    | 100% ✅       |
+| Componentes   | 100% ✅       |
+| Espacios      | 100% ✅       |
+| Interacciones | 100% ✅       |
+| **TOTAL**     | **100% ✅**   |
 
 ---
 

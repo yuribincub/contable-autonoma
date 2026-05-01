@@ -7,185 +7,219 @@
 
 :root {
 
-  /* --------------------------------------------------
+   /* --------------------------------------------------
      COLORES — Marca
   -------------------------------------------------- */
 
-  /* Azul principal */
-  --color-brand-500: #1A56FF;   /* CTA, botones, isotipo, focus */
-  --color-brand-600: #0F3ACC;   /* Hover botones, activos */
-  --color-brand-50:  #E8EEFF;   /* Fondos navegación activa, focus rings */
-  --color-brand-100: #C5D4FF;   /* Bordes informativos suaves */
+   /* Azul principal */
+   --color-brand-500: #1A56FF;
+   /* CTA, botones, isotipo, focus */
+   --color-brand-600: #0F3ACC;
+   /* Hover botones, activos */
+   --color-brand-50: #E8EEFF;
+   /* Fondos navegación activa, focus rings */
+   --color-brand-100: #C5D4FF;
+   /* Bordes informativos suaves */
 
-  /* Verde acento (ingresos / éxito positivo) */
-  --color-accent-500: #00C9A7;  /* Ingresos, éxito, positivo */
-  --color-accent-50:  #E0FBF6;  /* Fondos de ingresos */
-  --color-accent-600: #009E85;  /* Hover acento */
+   /* Verde acento (ingresos / éxito positivo) */
+   --color-accent-500: #00C9A7;
+   /* Ingresos, éxito, positivo */
+   --color-accent-50: #E0FBF6;
+   /* Fondos de ingresos */
+   --color-accent-600: #009E85;
+   /* Hover acento */
 
-  /* --------------------------------------------------
+   /* --------------------------------------------------
      COLORES — Neutros
   -------------------------------------------------- */
 
-  --color-gray-950: #0D0F14;    /* Títulos principales, fondos oscuros */
-  --color-gray-700: #2E323C;    /* Texto cuerpo, párrafos */
-  --color-gray-500: #6B7280;    /* Placeholders, texto secundario */
-  --color-gray-300: #D1D5DB;    /* Bordes inputs, divisores */
-  --color-gray-100: #F3F4F6;    /* Fondos secciones, botones secundarios */
-  --color-gray-50:  #F9FAFB;    /* Fondo general de la app */
+   --color-gray-950: #0D0F14;
+   /* Títulos principales, fondos oscuros */
+   --color-gray-700: #2E323C;
+   /* Texto cuerpo, párrafos */
+   --color-gray-500: #6B7280;
+   /* Placeholders, texto secundario */
+   --color-gray-300: #D1D5DB;
+   /* Bordes inputs, divisores */
+   --color-gray-100: #F3F4F6;
+   /* Fondos secciones, botones secundarios */
+   --color-gray-50: #F9FAFB;
+   /* Fondo general de la app */
 
-  /* --------------------------------------------------
+   /* --------------------------------------------------
      COLORES — Estados del sistema
   -------------------------------------------------- */
 
-  --color-success-500: #22C55E; /* Ingresos, confirmaciones, guardado */
-  --color-success-50:  #F0FDF4;
-  --color-success-700: #15803D;
+   --color-success-500: #22C55E;
+   /* Ingresos, confirmaciones, guardado */
+   --color-success-50: #F0FDF4;
+   --color-success-700: #15803D;
 
-  --color-error-500:   #EF4444; /* Gastos, errores, alertas críticas */
-  --color-error-50:    #FEF2F2;
-  --color-error-700:   #B91C1C;
+   --color-error-500: #EF4444;
+   /* Gastos, errores, alertas críticas */
+   --color-error-50: #FEF2F2;
+   --color-error-700: #B91C1C;
 
-  --color-warning-500: #F59E0B; /* Recordatorios fiscales, fechas próximas */
-  --color-warning-50:  #FFFBEB;
-  --color-warning-700: #B45309;
+   --color-warning-500: #F59E0B;
+   /* Recordatorios fiscales, fechas próximas */
+   --color-warning-50: #FFFBEB;
+   --color-warning-700: #B45309;
 
-  --color-info-500:    #3B82F6; /* Tooltips, mensajes informativos */
-  --color-info-50:     #EFF6FF;
-  --color-info-700:    #1D4ED8;
+   --color-info-500: #3B82F6;
+   /* Tooltips, mensajes informativos */
+   --color-info-50: #EFF6FF;
+   --color-info-700: #1D4ED8;
 
-  /* --------------------------------------------------
+   /* --------------------------------------------------
      SEMÁNTICA — Aliases funcionales
      Usa estos en componentes, no los valores de arriba.
   -------------------------------------------------- */
 
-  /* Texto */
-  --text-primary:    var(--color-gray-950);
-  --text-body:       var(--color-gray-700);
-  --text-secondary:  var(--color-gray-500);
-  --text-disabled:   var(--color-gray-300);
-  --text-on-brand:   #FFFFFF;
-  --text-on-dark:    #FFFFFF;
-  --text-income:     var(--color-accent-600);
-  --text-expense:    var(--color-error-700);
+   /* Texto */
+   --text-primary: var(--color-gray-950);
+   --text-body: var(--color-gray-700);
+   --text-secondary: var(--color-gray-500);
+   --text-disabled: var(--color-gray-300);
+   --text-on-brand: #FFFFFF;
+   --text-on-dark: #FFFFFF;
+   --text-income: var(--color-accent-600);
+   --text-expense: var(--color-error-700);
 
-  /* Fondos */
-  --bg-app:          var(--color-gray-50);
-  --bg-surface:      #FFFFFF;
-  --bg-surface-alt:  var(--color-gray-100);
-  --bg-brand:        var(--color-brand-500);
-  --bg-brand-hover:  var(--color-brand-600);
-  --bg-brand-subtle: var(--color-brand-50);
-  --bg-accent:       var(--color-accent-500);
-  --bg-success:      var(--color-success-50);
-  --bg-error:        var(--color-error-50);
-  --bg-warning:      var(--color-warning-50);
-  --bg-info:         var(--color-info-50);
-  --bg-dark:         var(--color-gray-950);
+   /* Fondos */
+   --bg-app: var(--color-gray-50);
+   --bg-surface: #FFFFFF;
+   --bg-surface-alt: var(--color-gray-100);
+   --bg-brand: var(--color-brand-500);
+   --bg-brand-hover: var(--color-brand-600);
+   --bg-brand-subtle: var(--color-brand-50);
+   --bg-accent: var(--color-accent-500);
+   --bg-success: var(--color-success-50);
+   --bg-error: var(--color-error-50);
+   --bg-warning: var(--color-warning-50);
+   --bg-info: var(--color-info-50);
+   --bg-dark: var(--color-gray-950);
 
-  /* Bordes */
-  --border-default:  var(--color-gray-300);
-  --border-subtle:   var(--color-gray-100);
-  --border-brand:    var(--color-brand-500);
-  --border-focus:    var(--color-brand-500);
-  --border-success:  var(--color-success-500);
-  --border-error:    var(--color-error-500);
-  --border-warning:  var(--color-warning-500);
+   /* Bordes */
+   --border-default: var(--color-gray-300);
+   --border-subtle: var(--color-gray-100);
+   --border-brand: var(--color-brand-500);
+   --border-focus: var(--color-brand-500);
+   --border-success: var(--color-success-500);
+   --border-error: var(--color-error-500);
+   --border-warning: var(--color-warning-500);
 
-  /* --------------------------------------------------
+   /* --------------------------------------------------
      TIPOGRAFÍA
   -------------------------------------------------- */
 
-  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'DM Mono', 'Courier New', monospace;
+   --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+   --font-mono: 'DM Mono', 'Courier New', monospace;
 
-  /* Tamaños */
-  --text-xs:   11px;   /* Label/Tag (caps) */
-  --text-sm:   13px;   /* Small/Caption */
-  --text-base: 16px;   /* Body */
-  --text-lg:   18px;   /* H4/Subheading */
-  --text-xl:   24px;   /* H3 */
-  --text-2xl:  36px;   /* H2 */
-  --text-3xl:  48px;   /* H1/Display */
+   /* Tamaños */
+   --text-xs: 11px;
+   /* Label/Tag (caps) */
+   --text-sm: 13px;
+   /* Small/Caption */
+   --text-base: 16px;
+   /* Body */
+   --text-lg: 18px;
+   /* H4/Subheading */
+   --text-xl: 24px;
+   /* H3 */
+   --text-2xl: 36px;
+   /* H2 */
+   --text-3xl: 48px;
+   /* H1/Display */
 
-  /* Pesos */
-  --font-normal:    400;
-  --font-semibold:  600;
-  --font-bold:      700;
+   /* Pesos */
+   --font-normal: 400;
+   --font-semibold: 600;
+   --font-bold: 700;
 
-  /* Interlineado */
-  --leading-tight:  1.2;
-  --leading-normal: 1.65;
-  --leading-relaxed:1.8;
+   /* Interlineado */
+   --leading-tight: 1.2;
+   --leading-normal: 1.65;
+   --leading-relaxed: 1.8;
 
-  /* Tracking */
-  --tracking-tight: -1.5px;  /* H1 */
-  --tracking-sm:    -1px;    /* H2 */
-  --tracking-xs:    -0.5px;  /* H3 */
-  --tracking-caps:   0.08em; /* Labels en mayúsculas */
+   /* Tracking */
+   --tracking-tight: -1.5px;
+   /* H1 */
+   --tracking-sm: -1px;
+   /* H2 */
+   --tracking-xs: -0.5px;
+   /* H3 */
+   --tracking-caps: 0.08em;
+   /* Labels en mayúsculas */
 
-  /* --------------------------------------------------
+   /* --------------------------------------------------
      ESPACIADO — Sistema de 4px
   -------------------------------------------------- */
 
-  --space-1:   4px;
-  --space-1-5: 6px;  /* Between space-1 and space-2 */
-  --space-2:   8px;
-  --space-3:   12px;
-  --space-4:   16px;
-  --space-5:   20px;
-  --space-6:   24px;
-  --space-8:   32px;
-  --space-10:  40px;
-  --space-12:  48px;
-  --space-16:  64px;
-  --space-20:  80px;
-  --space-24:  96px;
+   --space-1: 4px;
+   --space-1-5: 6px;
+   /* Between space-1 and space-2 */
+   --space-2: 8px;
+   --space-3: 12px;
+   --space-4: 16px;
+   --space-5: 20px;
+   --space-6: 24px;
+   --space-8: 32px;
+   --space-10: 40px;
+   --space-12: 48px;
+   --space-16: 64px;
+   --space-20: 80px;
+   --space-24: 96px;
 
-  /* --------------------------------------------------
+   /* --------------------------------------------------
      RADIOS DE BORDE
   -------------------------------------------------- */
 
-  --radius-sm:   6px;    /* Inputs, badges pequeños */
-  --radius-md:   10px;   /* Cards, botones, modales */
-  --radius-lg:   16px;   /* Cards grandes, paneles */
-  --radius-pill: 9999px; /* Tags, chips, avatares */
+   --radius-sm: 6px;
+   /* Inputs, badges pequeños */
+   --radius-md: 10px;
+   /* Cards, botones, modales */
+   --radius-lg: 16px;
+   /* Cards grandes, paneles */
+   --radius-pill: 9999px;
+   /* Tags, chips, avatares */
 
-  /* --------------------------------------------------
+   /* --------------------------------------------------
      SOMBRAS
   -------------------------------------------------- */
 
-  --shadow-xs:    0 1px 2px rgba(13, 15, 20, 0.05);
-  --shadow-sm:    0 2px 8px rgba(13, 15, 20, 0.08);
-  --shadow-md:    0 4px 16px rgba(13, 15, 20, 0.10);
-  --shadow-lg:    0 8px 32px rgba(13, 15, 20, 0.12);
-  --shadow-brand: 0 4px 16px rgba(26, 86, 255, 0.25); /* Solo para CTAs */
+   --shadow-xs: 0 1px 2px rgba(13, 15, 20, 0.05);
+   --shadow-sm: 0 2px 8px rgba(13, 15, 20, 0.08);
+   --shadow-md: 0 4px 16px rgba(13, 15, 20, 0.10);
+   --shadow-lg: 0 8px 32px rgba(13, 15, 20, 0.12);
+   --shadow-brand: 0 4px 16px rgba(26, 86, 255, 0.25);
+   /* Solo para CTAs */
 
-  /* --------------------------------------------------
+   /* --------------------------------------------------
      TRANSICIONES
   -------------------------------------------------- */
 
-  --transition-fast:   150ms ease;
-  --transition-normal: 200ms ease;
-  --transition-slow:   300ms ease;
+   --transition-fast: 150ms ease;
+   --transition-normal: 200ms ease;
+   --transition-slow: 300ms ease;
 
-  /* --------------------------------------------------
+   /* --------------------------------------------------
      LAYOUT
   -------------------------------------------------- */
 
-  --sidebar-width:       240px;
-  --sidebar-width-collapsed: 64px;
-  --topbar-height:       56px;
-  --content-max-width:   1200px;
-  --content-padding:     var(--space-6);
-  --content-padding-sm:  var(--space-4);
+   --sidebar-width: 240px;
+   --sidebar-width-collapsed: 64px;
+   --topbar-height: 56px;
+   --content-max-width: 1200px;
+   --content-padding: var(--space-6);
+   --content-padding-sm: var(--space-4);
 
-  /* --------------------------------------------------
+   /* --------------------------------------------------
      Z-INDEX
   -------------------------------------------------- */
 
-  --z-dropdown:  100;
-  --z-sticky:    200;
-  --z-sidebar:   300;
-  --z-modal:     400;
-  --z-toast:     500;
+   --z-dropdown: 100;
+   --z-sticky: 200;
+   --z-sidebar: 300;
+   --z-modal: 400;
+   --z-toast: 500;
 }
