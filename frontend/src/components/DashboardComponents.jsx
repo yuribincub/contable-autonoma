@@ -25,10 +25,9 @@ function formatEUR(amount) {
 // ── Selector de trimestre y año ───────────────────────────────────────────
 export function QuarterSelector({ quarter, year, onQuarterChange, onYearChange }) {
   return (
-    <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
+    <div className="quarter-selector">
       <select
-        className="form-select"
-        style={{ width: 'auto' }}
+        className="form-select quarter-selector-select"
         value={quarter}
         onChange={e => onQuarterChange(Number(e.target.value))}
       >
@@ -38,8 +37,7 @@ export function QuarterSelector({ quarter, year, onQuarterChange, onYearChange }
         <option value={4}>T4 — Oct/Nov/Dic</option>
       </select>
       <select
-        className="form-select"
-        style={{ width: 'auto' }}
+        className="form-select quarter-selector-select"
         value={year}
         onChange={e => onYearChange(Number(e.target.value))}
       >
@@ -54,47 +52,26 @@ export function QuarterSelector({ quarter, year, onQuarterChange, onYearChange }
 // ── Alertas fiscales ──────────────────────────────────────────────────────
 export function FiscalAlerts({ alerts }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginBottom: 'var(--space-6)' }}>
+    <div className="fiscal-alerts-list">
       {alerts.map(alert => (
         <div
           key={alert.id}
-          className="card card-sm"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--space-4)',
-            borderLeft: `3px solid ${alert.urgent ? 'var(--color-error-500)' : 'var(--color-warning-500)'}`,
-            background: alert.urgent ? 'var(--bg-error)' : 'var(--bg-warning)',
-            border: `1px solid ${alert.urgent ? 'var(--border-error)' : 'var(--border-warning)'}`,
-            borderLeftWidth: 3,
-          }}
+          className={`alert-card ${alert.urgent ? 'urgent' : 'warning'}`}
         >
-          {/* Icon */}
           <AlertTriangle
             size={18}
-            style={{ color: alert.urgent ? 'var(--color-error-500)' : 'var(--color-warning-500)', flexShrink: 0 }}
+            className={`alert-icon ${alert.urgent ? 'urgent' : 'warning'}`}
           />
-          {/* Text */}
-          <div style={{ flex: 1 }}>
-            <span style={{ fontWeight: 'var(--font-semibold)', fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>
-              {alert.model}
-            </span>
-            <span style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', marginLeft: 'var(--space-2)' }}>
-              {alert.description}
-            </span>
+          <div className="alert-text-section">
+            <p className="alert-model">{alert.model}</p>
+            <p className="alert-description">{alert.description}</p>
           </div>
-
-          {/* Badge días */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', flexShrink: 0 }}>
+          <div className="alert-badge-section">
             <Clock size={13} style={{ color: 'var(--text-secondary)' }} />
-            <span
-              className={`badge ${alert.urgent ? 'badge-error' : 'badge-warning'}`}
-            >
+            <span className={`badge ${alert.urgent ? 'badge-error' : 'badge-warning'}`}>
               {alert.days > 0 ? `${alert.days} días` : 'Vencido'}
             </span>
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-              · Vence {alert.dueDate}
-            </span>
+            <span className="alert-days-badge">· Vence {alert.dueDate}</span>
           </div>
         </div>
       ))}
@@ -103,7 +80,6 @@ export function FiscalAlerts({ alerts }) {
 }
 
 // ── Tarjetas KPI ─────────────────────────────────────────────────────────
-// Usa .card-metric de components.css (línea 397)
 export function SummaryCards({ totals }) {
   const { income, expenses, profit } = totals;
   const profitPositive = profit >= 0;
@@ -111,29 +87,23 @@ export function SummaryCards({ totals }) {
   const cards = [
     {
       label: 'Ingresos',
+      type: 'income',
       value: formatEUR(income),
       icon: <ArrowUpRight size={18} />,
-      iconBg: 'var(--color-accent-50)',
-      iconColor: 'var(--color-accent-600)',
-      valueColor: 'var(--color-accent-600)',
       badge: null,
     },
     {
       label: 'Gastos deducibles',
+      type: 'expense',
       value: formatEUR(expenses),
       icon: <ArrowDownRight size={18} />,
-      iconBg: 'var(--color-error-50)',
-      iconColor: 'var(--color-error-500)',
-      valueColor: 'var(--color-error-700)',
       badge: null,
     },
     {
       label: 'Beneficio neto',
+      type: 'profit',
       value: formatEUR(profit),
       icon: <TrendingUp size={18} />,
-      iconBg: profitPositive ? 'var(--color-accent-50)' : 'var(--color-error-50)',
-      iconColor: profitPositive ? 'var(--color-accent-600)' : 'var(--color-error-500)',
-      valueColor: profitPositive ? 'var(--color-accent-600)' : 'var(--color-error-700)',
       badge: profitPositive
         ? <span className="badge badge-success">↑ Positivo</span>
         : <span className="badge badge-error">↓ Negativo</span>,
@@ -141,34 +111,18 @@ export function SummaryCards({ totals }) {
   ];
 
   return (
-    <div className="grid-metrics" style={{ gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: 'var(--space-6)' }}>
+    <div className="summary-cards-grid">
       {cards.map(card => (
-        <div key={card.label} className="card">
-          {/* Cabecera tarjeta */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-4)' }}>
-            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--text-secondary)' }}>
-              {card.label}
-            </span>
-            <div style={{
-              width: 32, height: 32, borderRadius: 'var(--radius-sm)',
-              background: card.iconBg,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: card.iconColor,
-            }}>
+        <div key={card.label} className="summary-card">
+          <div className="summary-card-header">
+            <span className="summary-card-label">{card.label}</span>
+            <div className={`summary-card-icon-box ${card.type}`}>
               {card.icon}
             </div>
           </div>
-          {/* Valor */}
-          <p className="mono" style={{
-            fontSize: 'var(--text-2xl)',
-            fontWeight: 'var(--font-bold)',
-            color: card.valueColor,
-            margin: '0 0 var(--space-2) 0',
-            lineHeight: 1,
-          }}>
+          <p className={`summary-card-value ${card.type}`}>
             {card.value}
           </p>
-          {/* Badge opcional */}
           {card.badge}
         </div>
       ))}
@@ -181,56 +135,32 @@ export function TaxCards({ taxes, quarter, year }) {
   const { irpf130, vat303 } = taxes;
 
   return (
-    <div style={{ marginBottom: 'var(--space-8)' }}>
-      {/* Cabecera sección */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-4)' }}>
-        <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-semibold)', color: 'var(--text-primary)', margin: 0 }}>
-          Modelos fiscales
-        </h3>
+    <div className="tax-cards-container">
+      <div className="tax-cards-header">
+        <h3 className="tax-cards-title">Modelos fiscales</h3>
         <span className="badge badge-neutral">T{quarter} / {year}</span>
       </div>
-
-      <div className="grid-metrics" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
+      <div className="tax-cards-grid">
         {/* Modelo 130 */}
-        <div className="card" style={{ borderTop: '3px solid var(--color-brand-500)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-3)' }}>
-            <FileText size={16} style={{ color: 'var(--color-brand-500)' }} />
-            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--text-secondary)' }}>
-              Modelo 130 — IRPF
-            </span>
+        <div className="tax-card-item brand">
+          <div className="tax-card-header">
+            <FileText size={16} className="tax-card-icon brand" />
+            <span className="tax-card-icon-label">Modelo 130 — IRPF</span>
           </div>
-          <p className="mono" style={{
-            fontSize: 'var(--text-2xl)',
-            fontWeight: 'var(--font-bold)',
-            color: 'var(--color-brand-500)',
-            margin: '0 0 var(--space-1) 0',
-          }}>
-            {formatEUR(irpf130)}
-          </p>
-          <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', margin: 0 }}>
-            20% sobre beneficio neto
-          </p>
+          <p className="tax-card-value brand">{formatEUR(irpf130)}</p>
+          <p className="tax-card-note">20% sobre beneficio neto</p>
         </div>
 
         {/* Modelo 303 */}
-        <div className="card" style={{ borderTop: '3px solid var(--color-info-500)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-3)' }}>
-            <FileText size={16} style={{ color: 'var(--color-info-500)' }} />
-            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--text-secondary)' }}>
-              Modelo 303 — IVA
-            </span>
+        <div className="tax-card-item info">
+          <div className="tax-card-header">
+            <FileText size={16} className="tax-card-icon info" />
+            <span className="tax-card-icon-label">Modelo 303 — IVA</span>
           </div>
-          <p className="mono" style={{
-            fontSize: 'var(--text-2xl)',
-            fontWeight: 'var(--font-bold)',
-            color: vat303 < 0 ? 'var(--color-accent-600)' : 'var(--color-error-700)',
-            margin: '0 0 var(--space-1) 0',
-          }}>
+          <p className={`tax-card-value ${vat303 < 0 ? 'info' : ''}`} style={vat303 >= 0 ? { color: 'var(--color-error-700)' } : {}}>
             {formatEUR(vat303)}
           </p>
-          <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', margin: 0 }}>
-            {vat303 <= 0 ? 'IVA soportado a compensar' : 'IVA a ingresar'}
-          </p>
+          <p className="tax-card-note">{vat303 <= 0 ? 'IVA soportado a compensar' : 'IVA a ingresar'}</p>
         </div>
       </div>
     </div>
@@ -269,24 +199,9 @@ export function MovementsGrid({ income, expenses }) {
 
 function MovementsTable({ title, rows }) {
   return (
-    <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-      {/* Header */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: 'var(--space-4) var(--space-5)',
-        borderBottom: '1px solid var(--border-subtle)',
-      }}>
-        <h3 style={{
-          fontSize: 'var(--text-base)',
-          fontWeight: 'var(--font-semibold)',
-          color: 'var(--text-primary)',
-          margin: 0
-        }}>
-          {title}
-        </h3>
-
+    <div className="movements-table-wrapper">
+      <div className="movements-table-header">
+        <h3 className="movements-table-title">{title}</h3>
         <button
           className="btn btn-ghost btn-sm"
           onClick={() => window.location.href = '/movements'}
@@ -295,12 +210,9 @@ function MovementsTable({ title, rows }) {
         </button>
       </div>
 
-      {/* Table */}
       {rows.length === 0 ? (
-        <div className="empty-state" style={{ padding: 'var(--space-10)' }}>
-          <p className="empty-state-desc">
-            No hay movimientos en este trimestre
-          </p>
+        <div className="movements-empty-state">
+          <p className="movements-empty-state-desc">No hay movimientos en este trimestre</p>
         </div>
       ) : (
         <div className="table-wrapper">
@@ -314,14 +226,13 @@ function MovementsTable({ title, rows }) {
                 <th style={{ textAlign: 'right' }}>Importe</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="movements-tbody">
               {rows.map(row => {
                 const isIncome = row.type === 'income';
 
                 return (
                   <tr
                     key={row.id}
-                    style={{ cursor: 'pointer' }}
                     onClick={() => {
                       if (row.type === 'income') {
                         window.location.href = `/invoices/${row.originalId}`;
@@ -330,18 +241,11 @@ function MovementsTable({ title, rows }) {
                       }
                     }}
                   >
+                    <td>{isIncome ? (row.invoice_number || '—') : '—'}</td>
                     <td>
-                      {isIncome ? (row.invoice_number || '—') : '—'}
+                      <div className="movements-cell-concept">{row.concept}</div>
+                      <div className="movements-cell-date">{row.date}</div>
                     </td>
-                    <td>
-                      <div style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)' }}>
-                        {row.concept}
-                      </div>
-                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                        {row.date}
-                      </div>
-                    </td>
-
                     <td>
                       <span className={`badge ${isIncome ? 'badge-success' : 'badge-error'}`}>
                         {isIncome ? 'Ingreso' : 'Gasto'}
@@ -350,7 +254,7 @@ function MovementsTable({ title, rows }) {
                     <td style={{ textAlign: 'right' }}>
                       <StatusBadge status={row.status} isIncome={isIncome} />
                     </td>
-                    <td className={`amount ${isIncome ? 'amount-income' : 'amount-expense'}`}>
+                    <td className={`movements-cell-amount ${isIncome ? 'income' : 'expense'}`}>
                       {isIncome ? '+' : '-'}{formatEUR(row.amount)}
                     </td>
                   </tr>
