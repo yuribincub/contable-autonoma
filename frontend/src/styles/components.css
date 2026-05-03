@@ -1387,3 +1387,30 @@
 .quarter-selector-select {
   width: auto;
 }
+
+/* Filters Section */
+.filters-section {
+  margin-bottom: var(--space-6);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.filters-grid {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.filters-grid .form-select {
+  min-width: 150px;
+}
+
+/* Loading State */
+.loading-state {
+  text-align: center;
+  padding: var(--space-8);
+  color: var(--text-secondary);
+}

@@ -63,7 +63,7 @@ export default function Dashboard({ session }) {
                 <>
                     <SummaryCards totals={totals} />
                     <TaxCards taxes={taxes} quarter={selectedQuarter} year={selectedYear} />
-                    <MovementsGrid income={income} expenses={expenses} />
+                    <MovementsGrid income={income} expenses={expenses} title="Últimos movimientos" />
                 </>
             )}
 

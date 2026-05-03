@@ -11,10 +11,12 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { supabase } from './config/supabase';
 
 // Páginas
-import Login       from './pages/Login';
-import Dashboard   from './pages/Dashboard';
-import IncomeForm  from './pages/IncomeForm';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import IncomeForm from './pages/IncomeForm';
 import ExpenseForm from './pages/ExpenseForm';
+import Movements from './pages/Movements';
+import InvoiceView from './pages/InvoiceView';
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -44,13 +46,15 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         {/* Dashboard principal */}
-        <Route path="/"          element={<Dashboard   session={session} />} />
-        <Route path="/dashboard" element={<Dashboard   session={session} />} />
+        <Route path="/" element={<Dashboard session={session} />} />
+        <Route path="/dashboard" element={<Dashboard session={session} />} />
 
         {/* Ingresos y gastos */}
-        <Route path="/income"   element={<IncomeForm  session={session} />} />
+        <Route path="/income" element={<IncomeForm session={session} />} />
         <Route path="/expenses" element={<ExpenseForm session={session} />} />
 
+        <Route path="/movements" element={<Movements session={session} />} />
+        <Route path="/invoice/:id" element={<InvoiceView session={session} />} />
         {/* Rutas futuras — descomenta cuando estén listas */}
         {/* <Route path="/clients"   element={<Clients   session={session} />} /> */}
         {/* <Route path="/suppliers" element={<Suppliers session={session} />} /> */}

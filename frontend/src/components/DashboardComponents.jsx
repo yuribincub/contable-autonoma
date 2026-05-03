@@ -169,7 +169,7 @@ export function TaxCards({ taxes, quarter, year }) {
 
 // ── Tablas de últimos movimientos ──────────────────────────────────────────
 // Usa .table, .table th, .table td de components.css
-export function MovementsGrid({ income, expenses }) {
+export function MovementsGrid({ income, expenses, maxRows = 20, filters = { type: 'all', status: 'all' }, title = "Últimos movimientos", showViewAllButton = true }) {
   const movements = [
     ...income.map(i => ({
       ...i,
@@ -187,28 +187,37 @@ export function MovementsGrid({ income, expenses }) {
     })),
   ]
     .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .slice(0, 20); // latest movements
+    .slice(0, maxRows);
+
+  const filteredMovements = movements.filter(movement => {
+    if (filters.type !== 'all' && movement.type !== filters.type) return false;
+    if (filters.status !== 'all' && movement.status !== filters.status) return false;
+    return true;
+  });
 
   return (
     <MovementsTable
-      title="Últimos movimientos"
-      rows={movements}
+      title={title}
+      rows={filteredMovements}
+      showViewAllButton={showViewAllButton}
     />
   );
 }
 
-function MovementsTable({ title, rows }) {
+export function MovementsTable({ title, rows, showViewAllButton = true }) {
   return (
     <div className="movements-table-wrapper">
-      <div className="movements-table-header">
-        <h3 className="movements-table-title">{title}</h3>
-        <button
-          className="btn btn-ghost btn-sm"
-          onClick={() => window.location.href = '/movements'}
-        >
-          Ver todo →
-        </button>
-      </div>
+      {showViewAllButton && (
+        <div className="movements-table-header">
+          <h3 className="movements-table-title">{title}</h3>
+          <button
+            className="btn btn-ghost btn-sm"
+            onClick={() => window.location.href = '/movements'}
+          >
+            Ver todo →
+          </button>
+        </div>
+      )}
 
       {rows.length === 0 ? (
         <div className="movements-empty-state">
@@ -235,9 +244,9 @@ function MovementsTable({ title, rows }) {
                     key={row.id}
                     onClick={() => {
                       if (row.type === 'income') {
-                        window.location.href = `/invoices/${row.originalId}`;
+                        window.location.href = `/invoice/${row.originalId}`;
                       } else {
-                        window.location.href = `/expenses/${row.originalId}`;
+                        window.location.href = `/expense/${row.originalId}`;
                       }
                     }}
                   >
