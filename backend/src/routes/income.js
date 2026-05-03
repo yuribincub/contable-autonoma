@@ -31,7 +31,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// POST /income — crear nuevo ingreso
+// POST /income — crear nuevo ingreso con número de factura automático
 router.post('/', async (req, res) => {
     const {
         user_id,
@@ -40,21 +40,34 @@ router.post('/', async (req, res) => {
         concept,
         base_amount,
         irpf_rate = 0,
-        file_url = null
+        file_url = null,
+        invoice_status = 'issued'
     } = req.body;
 
-    // Validaciones básicas
     if (!user_id || !date || !concept || !base_amount) {
         return res.status(400).json({ error: 'Faltan campos obligatorios: user_id, date, concept, base_amount' });
     }
 
     try {
-        // Calcular importes — IVA siempre 0 para cliente EEUU
+        const year = new Date(date).getFullYear();
+
         const vat_rate = 0;
         const vat_amount = 0;
         const irpf_amount = (base_amount * irpf_rate) / 100;
         const total_amount = base_amount - irpf_amount;
 
+        // Generar número de factura
+        const { data: numberData, error: numberError } = await supabase
+            .rpc('generate_invoice_number', { p_year: year });
+
+        console.log('RPC result:', JSON.stringify(numberData));
+        console.log('RPC error:', JSON.stringify(numberError));
+
+        if (numberError) throw numberError;
+
+        const invoice_number = numberData[0].invoice_number;
+
+        // Insertar ingreso
         const { data, error } = await supabase
             .from('income')
             .insert([{
@@ -68,14 +81,18 @@ router.post('/', async (req, res) => {
                 irpf_rate,
                 irpf_amount,
                 total_amount,
-                file_url
+                file_url,
+                invoice_number,
+                invoice_status
             }])
             .select();
 
         if (error) throw error;
 
         res.status(201).json(data[0]);
+
     } catch (error) {
+        console.error('Error creando ingreso:', error);
         res.status(500).json({ error: error.message });
     }
 });

@@ -15,6 +15,7 @@ export default function Income({ session }) {
     const [ocrStep, setOcrStep] = useState(''); // mensaje del paso actual
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
     const [ocrWarning, setOcrWarning] = useState(null);
     const [ocrDone, setOcrDone] = useState(false);
 
@@ -93,7 +94,7 @@ export default function Income({ session }) {
                 uploadedFileUrl = data.file_url;
             }
 
-            await api.post('/income', {
+            const response = await api.post('/income', {
                 user_id: session.user.id,
                 date: form.date,
                 concept: form.concept,
@@ -103,10 +104,12 @@ export default function Income({ session }) {
                 file_url: uploadedFileUrl,
             });
 
+            const invoiceNum = response.data.invoice_number;
             setSuccess(true);
+            setSuccessMessage(`✅ Factura ${invoiceNum} guardada correctamente`);
             setTimeout(() => {
                 window.location.href = '/';
-            }, 1500);
+            }, 2000);
             setForm({ date: '', concept: '', base_amount: '', irpf_rate: 0 });
 
         } catch (error) {
@@ -245,7 +248,7 @@ export default function Income({ session }) {
                 )}
 
                 {error && <p className="form-error">{error}</p>}
-                {success && <p className="alert alert-success">✅ Ingreso guardado correctamente</p>}
+                {success && <p className="alert alert-success">{successMessage}</p>}
 
                 <button
                     className="btn btn-primary"
