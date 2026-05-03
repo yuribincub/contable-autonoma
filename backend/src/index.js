@@ -6,6 +6,7 @@ require('dotenv').config();
 const supabase = require('./config/supabase');
 const incomeRoutes = require('./routes/income');
 const expensesRoutes = require('./routes/expenses');
+const ocrRoutes = require('./routes/ocr');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,6 +18,7 @@ app.use(express.json());
 // Rutas
 app.use('/income', incomeRoutes);
 app.use('/expenses', expensesRoutes);
+app.use('/ocr', ocrRoutes);
 
 // Ruta de prueba general
 app.get('/health', (req, res) => {

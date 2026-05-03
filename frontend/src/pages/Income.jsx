@@ -1,4 +1,4 @@
-// Página para añadir ingresos
+// Página para añadir ingresos con OCR de transferencias bancarias
 import { useState } from 'react';
 import api from '../config/api';
 
@@ -9,12 +9,67 @@ export default function Income({ session }) {
         base_amount: '',
         irpf_rate: 0,
     });
+    const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [ocrLoading, setOcrLoading] = useState(false);
+    const [ocrStep, setOcrStep] = useState(''); // mensaje del paso actual
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
+    const [ocrWarning, setOcrWarning] = useState(null);
+    const [ocrDone, setOcrDone] = useState(false);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    // Procesar archivo con OCR
+    const handleFileChange = async (e) => {
+        const selectedFile = e.target.files[0];
+        if (!selectedFile) return;
+
+        setFile(selectedFile);
+        setOcrLoading(true);
+        setOcrDone(false);
+        setOcrWarning(null);
+        setOcrStep('📂 Leyendo archivo...');
+        setError(null);
+
+        try {
+            // Mínimo 800ms en cada paso para que se vea
+            await new Promise(r => setTimeout(r, 800));
+            setOcrStep('🔍 Analizando documento...');
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            const { data } = await api.post('/ocr/extract', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            await new Promise(r => setTimeout(r, 600));
+            setOcrStep('📅 Extrayendo fecha e importe...');
+            await new Promise(r => setTimeout(r, 600));
+
+            setForm(prev => ({
+                ...prev,
+                date: data.date || prev.date,
+                base_amount: data.amount || prev.base_amount,
+                concept: data.concept || prev.concept,
+            }));
+
+            if (!data.date || !data.amount) {
+                setOcrWarning('No se pudieron extraer todos los datos. Revisa y completa el formulario.');
+            } else {
+                setOcrDone(true);
+                setOcrStep('');
+            }
+
+        } catch (error) {
+            console.error('Error OCR:', error.response?.data || error.message);
+            setOcrWarning('Error leyendo el archivo. Rellena los datos manualmente.');
+            setOcrStep('');
+        } finally {
+            setOcrLoading(false);
+        }
     };
 
     const handleSubmit = async () => {
@@ -23,6 +78,21 @@ export default function Income({ session }) {
         setSuccess(false);
 
         try {
+            let uploadedFileUrl = null;
+
+            // Si hay archivo, subirlo a Supabase Storage
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('user_id', session.user.id);
+
+                const { data } = await api.post('/ocr/upload', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+
+                uploadedFileUrl = data.file_url;
+            }
+
             await api.post('/income', {
                 user_id: session.user.id,
                 date: form.date,
@@ -30,12 +100,15 @@ export default function Income({ session }) {
                 base_amount: Number(form.base_amount),
                 irpf_rate: Number(form.irpf_rate),
                 client: 'Cliente EEUU',
+                file_url: uploadedFileUrl,
             });
+
             setSuccess(true);
             setTimeout(() => {
                 window.location.href = '/';
             }, 1500);
             setForm({ date: '', concept: '', base_amount: '', irpf_rate: 0 });
+
         } catch (error) {
             setError(error.response?.data?.error || 'Error al guardar el ingreso');
         } finally {
@@ -56,6 +129,49 @@ export default function Income({ session }) {
                 {/* Cliente fijo — siempre EEUU, sin IVA */}
                 <div className="alert alert-info">
                     📌 Cliente: EEUU — IVA 0% (operación no sujeta)
+                </div>
+
+                {/* Subida de transferencia con OCR */}
+                {/* Subida de transferencia con OCR */}
+                <div className="form-group">
+                    <label className="form-label">Justificante de transferencia</label>
+                    <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/jpg,application/pdf"
+                        onChange={handleFileChange}
+                        style={{ display: 'none' }}
+                        id="file-upload"
+                    />
+                    <label htmlFor="file-upload" className="btn btn-secondary btn-upload">
+                        📎 Subir transferencia (JPG, PNG, PDF)
+                    </label>
+
+                    {/* Estado del proceso OCR */}
+                    {ocrLoading && (
+                        <div className="ocr-status">
+                            <span className="ocr-spinner">⏳</span>
+                            <span>{ocrStep}</span>
+                        </div>
+                    )}
+
+                    {/* Éxito extracción */}
+                    {ocrDone && !ocrLoading && (
+                        <div className="ocr-success">
+                            ✅ Datos extraídos correctamente — revisa y confirma antes de guardar
+                        </div>
+                    )}
+
+                    {/* Nombre archivo */}
+                    {file && !ocrLoading && (
+                        <p className="form-hint">📄 {file.name}</p>
+                    )}
+
+                    {/* Aviso si no se extrajeron todos */}
+                    {ocrWarning && (
+                        <p className="form-hint form-hint-warning">⚠️ {ocrWarning}</p>
+                    )}
+
+                    <p className="form-hint">El sistema intentará extraer fecha e importe automáticamente</p>
                 </div>
 
                 <div className="form-group">

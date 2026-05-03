@@ -1,4 +1,4 @@
-// Página para añadir gastos
+// Página para añadir gastos con OCR de facturas
 import { useState } from 'react';
 import api from '../config/api';
 
@@ -21,19 +21,78 @@ export default function Expenses({ session }) {
         vat_rate: 21,
         deductible_percentage: 100,
     });
+    const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [ocrLoading, setOcrLoading] = useState(false);
+    const [ocrStep, setOcrStep] = useState('');
+    const [ocrDone, setOcrDone] = useState(false);
+    const [ocrWarning, setOcrWarning] = useState(null);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
-        // Al cambiar categoría, actualizar porcentaje deducible automáticamente
         if (name === 'category') {
             const cat = CATEGORIES.find(c => c.value === value);
             setForm({ ...form, category: value, deductible_percentage: cat.deductible });
         } else {
             setForm({ ...form, [name]: value });
+        }
+    };
+
+    // Procesar factura con OCR
+    const handleFileChange = async (e) => {
+        const selectedFile = e.target.files[0];
+        if (!selectedFile) return;
+
+        setFile(selectedFile);
+        setOcrLoading(true);
+        setOcrDone(false);
+        setOcrWarning(null);
+        setOcrStep('📂 Leyendo factura...');
+        setError(null);
+
+        try {
+            await new Promise(r => setTimeout(r, 800));
+            setOcrStep('🔍 Analizando documento...');
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            const { data } = await api.post('/ocr/extract-expense', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            await new Promise(r => setTimeout(r, 600));
+            setOcrStep('📋 Extrayendo datos de la factura...');
+            await new Promise(r => setTimeout(r, 600));
+
+            // Rellenar formulario con datos extraídos
+            setForm(prev => ({
+                ...prev,
+                date: data.date || prev.date,
+                provider: data.provider || prev.provider,
+                base_amount: data.base_amount || prev.base_amount,
+                vat_rate: data.vat_rate || prev.vat_rate,
+            }));
+
+            const missing = [];
+            if (!data.date) missing.push('fecha');
+            if (!data.provider) missing.push('proveedor');
+            if (!data.base_amount) missing.push('base imponible');
+
+            if (missing.length > 0) {
+                setOcrWarning(`No se pudo extraer: ${missing.join(', ')}. Completa manualmente.`);
+            } else {
+                setOcrDone(true);
+            }
+
+        } catch (error) {
+            console.error('Error OCR:', error.response?.data || error.message);
+            setOcrWarning('Error leyendo la factura. Rellena los datos manualmente.');
+        } finally {
+            setOcrLoading(false);
+            setOcrStep('');
         }
     };
 
@@ -43,6 +102,21 @@ export default function Expenses({ session }) {
         setSuccess(false);
 
         try {
+            let uploadedFileUrl = null;
+
+            // Si hay archivo, subirlo a Supabase Storage
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('user_id', session.user.id);
+
+                const { data } = await api.post('/ocr/upload', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+
+                uploadedFileUrl = data.file_url;
+            }
+
             await api.post('/expenses', {
                 user_id: session.user.id,
                 date: form.date,
@@ -52,12 +126,15 @@ export default function Expenses({ session }) {
                 base_amount: Number(form.base_amount),
                 vat_rate: Number(form.vat_rate),
                 deductible_percentage: Number(form.deductible_percentage),
+                file_url: uploadedFileUrl,
             });
+
             setSuccess(true);
             setTimeout(() => {
                 window.location.href = '/';
             }, 1500);
             setForm({ date: '', provider: '', concept: '', category: 'software', base_amount: '', vat_rate: 21, deductible_percentage: 100 });
+
         } catch (error) {
             setError(error.response?.data?.error || 'Error al guardar el gasto');
         } finally {
@@ -81,6 +158,49 @@ export default function Expenses({ session }) {
             </div>
 
             <div className="card">
+
+                {/* Subida de factura con OCR */}
+                <div className="form-group">
+                    <label className="form-label">Factura del gasto</label>
+                    <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/jpg,application/pdf"
+                        onChange={handleFileChange}
+                        style={{ display: 'none' }}
+                        id="file-upload-expense"
+                    />
+                    <label htmlFor="file-upload-expense" className="btn btn-secondary btn-upload">
+                        📎 Subir factura (JPG, PNG, PDF)
+                    </label>
+
+                    {/* Estado del proceso OCR */}
+                    {ocrLoading && (
+                        <div className="ocr-status">
+                            <span className="ocr-spinner">⏳</span>
+                            <span>{ocrStep}</span>
+                        </div>
+                    )}
+
+                    {/* Éxito extracción */}
+                    {ocrDone && !ocrLoading && (
+                        <div className="ocr-success">
+                            ✅ Datos extraídos correctamente — revisa y confirma antes de guardar
+                        </div>
+                    )}
+
+                    {/* Nombre archivo */}
+                    {file && !ocrLoading && (
+                        <p className="form-hint">📄 {file.name}</p>
+                    )}
+
+                    {/* Aviso si faltan datos */}
+                    {ocrWarning && (
+                        <p className="form-hint form-hint-warning">⚠️ {ocrWarning}</p>
+                    )}
+
+                    <p className="form-hint">El sistema intentará extraer los datos automáticamente</p>
+                </div>
+
                 <div className="form-group">
                     <label className="form-label">Fecha *</label>
                     <input className="form-input" type="date" name="date" value={form.date} onChange={handleChange} />
