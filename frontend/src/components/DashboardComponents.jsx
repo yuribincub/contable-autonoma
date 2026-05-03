@@ -243,17 +243,21 @@ export function MovementsGrid({ income, expenses }) {
   const movements = [
     ...income.map(i => ({
       ...i,
+      id: `income-${i.id}`,
+      originalId: i.id,
       type: 'income',
       amount: i.base_amount,
     })),
     ...expenses.map(e => ({
       ...e,
+      id: `expense-${e.id}`,
+      originalId: e.id,
       type: 'expense',
       amount: e.total_amount,
     })),
   ]
     .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .slice(0, 10); // latest movements
+    .slice(0, 20); // latest movements
 
   return (
     <MovementsTable
@@ -268,13 +272,27 @@ function MovementsTable({ title, rows }) {
     <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
       {/* Header */}
       <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         padding: 'var(--space-4) var(--space-5)',
         borderBottom: '1px solid var(--border-subtle)',
       }}>
-        <h3 style={{ fontSize: 'var(--text-base)', fontWeight: 'var(--font-semibold)', color: 'var(--text-primary)', margin: 0 }}>
+        <h3 style={{
+          fontSize: 'var(--text-base)',
+          fontWeight: 'var(--font-semibold)',
+          color: 'var(--text-primary)',
+          margin: 0
+        }}>
           {title}
         </h3>
+
+        <button
+          className="btn btn-ghost btn-sm"
+          onClick={() => window.location.href = '/movements'}
+        >
+          Ver todo →
+        </button>
       </div>
 
       {/* Table */}
@@ -301,7 +319,17 @@ function MovementsTable({ title, rows }) {
                 const isIncome = row.type === 'income';
 
                 return (
-                  <tr key={row.id}>
+                  <tr
+                    key={row.id}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      if (row.type === 'income') {
+                        window.location.href = `/invoices/${row.originalId}`;
+                      } else {
+                        window.location.href = `/expenses/${row.originalId}`;
+                      }
+                    }}
+                  >
                     <td>
                       {isIncome ? (row.invoice_number || '—') : '—'}
                     </td>
