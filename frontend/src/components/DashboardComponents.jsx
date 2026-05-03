@@ -63,25 +63,24 @@ export function FiscalAlerts({ alerts }) {
             display: 'flex',
             alignItems: 'center',
             gap: 'var(--space-4)',
-            borderLeft: `3px solid ${alert.urgente ? 'var(--color-error-500)' : 'var(--color-warning-500)'}`,
-            background: alert.urgente ? 'var(--bg-error)' : 'var(--bg-warning)',
-            border: `1px solid ${alert.urgente ? 'var(--border-error)' : 'var(--border-warning)'}`,
+            borderLeft: `3px solid ${alert.urgent ? 'var(--color-error-500)' : 'var(--color-warning-500)'}`,
+            background: alert.urgent ? 'var(--bg-error)' : 'var(--bg-warning)',
+            border: `1px solid ${alert.urgent ? 'var(--border-error)' : 'var(--border-warning)'}`,
             borderLeftWidth: 3,
           }}
         >
-          {/* Icono */}
+          {/* Icon */}
           <AlertTriangle
             size={18}
-            style={{ color: alert.urgente ? 'var(--color-error-500)' : 'var(--color-warning-500)', flexShrink: 0 }}
+            style={{ color: alert.urgent ? 'var(--color-error-500)' : 'var(--color-warning-500)', flexShrink: 0 }}
           />
-
-          {/* Texto */}
+          {/* Text */}
           <div style={{ flex: 1 }}>
             <span style={{ fontWeight: 'var(--font-semibold)', fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>
-              {alert.modelo}
+              {alert.model}
             </span>
             <span style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', marginLeft: 'var(--space-2)' }}>
-              {alert.descripcion}
+              {alert.description}
             </span>
           </div>
 
@@ -89,12 +88,12 @@ export function FiscalAlerts({ alerts }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', flexShrink: 0 }}>
             <Clock size={13} style={{ color: 'var(--text-secondary)' }} />
             <span
-              className={`badge ${alert.urgente ? 'badge-error' : 'badge-warning'}`}
+              className={`badge ${alert.urgent ? 'badge-error' : 'badge-warning'}`}
             >
-              {alert.dias > 0 ? `${alert.dias} días` : 'Vencido'}
+              {alert.days > 0 ? `${alert.days} días` : 'Vencido'}
             </span>
             <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-              · Vence {alert.vencimiento}
+              · Vence {alert.dueDate}
             </span>
           </div>
         </div>
@@ -241,30 +240,33 @@ export function TaxCards({ taxes, quarter, year }) {
 // ── Tablas de últimos movimientos ──────────────────────────────────────────
 // Usa .table, .table th, .table td de components.css
 export function MovementsGrid({ income, expenses }) {
+  const movements = [
+    ...income.map(i => ({
+      ...i,
+      type: 'income',
+      amount: i.base_amount,
+    })),
+    ...expenses.map(e => ({
+      ...e,
+      type: 'expense',
+      amount: e.total_amount,
+    })),
+  ]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 10); // latest movements
+
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-6)' }}>
-      <MovementsTable
-        title="Últimos ingresos"
-        rows={income.slice(0, 5)}
-        tipo="income"
-        verTodosHref="/income"
-      />
-      <MovementsTable
-        title="Últimos gastos"
-        rows={expenses.slice(0, 5)}
-        tipo="expense"
-        verTodosHref="/expenses"
-      />
-    </div>
+    <MovementsTable
+      title="Últimos movimientos"
+      rows={movements}
+    />
   );
 }
 
-function MovementsTable({ title, rows, tipo, verTodosHref }) {
-  const esIngreso = tipo === 'income';
-
+function MovementsTable({ title, rows }) {
   return (
     <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-      {/* Cabecera */}
+      {/* Header */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: 'var(--space-4) var(--space-5)',
@@ -273,19 +275,13 @@ function MovementsTable({ title, rows, tipo, verTodosHref }) {
         <h3 style={{ fontSize: 'var(--text-base)', fontWeight: 'var(--font-semibold)', color: 'var(--text-primary)', margin: 0 }}>
           {title}
         </h3>
-        <button
-          className="btn btn-ghost btn-sm"
-          onClick={() => window.location.href = verTodosHref}
-        >
-          Ver todos →
-        </button>
       </div>
 
-      {/* Tabla */}
+      {/* Table */}
       {rows.length === 0 ? (
         <div className="empty-state" style={{ padding: 'var(--space-10)' }}>
           <p className="empty-state-desc">
-            {esIngreso ? 'No hay ingresos en este trimestre' : 'No hay gastos en este trimestre'}
+            No hay movimientos en este trimestre
           </p>
         </div>
       ) : (
@@ -293,30 +289,45 @@ function MovementsTable({ title, rows, tipo, verTodosHref }) {
           <table className="table" style={{ width: '100%' }}>
             <thead>
               <tr>
+                <th>Factura</th>
                 <th>Concepto</th>
-                <th style={{ textAlign: 'right' }}>Importe</th>
+                <th>Tipo</th>
                 <th style={{ textAlign: 'right' }}>Estado</th>
+                <th style={{ textAlign: 'right' }}>Importe</th>
               </tr>
             </thead>
             <tbody>
-              {rows.map(row => (
-                <tr key={row.id}>
-                  <td>
-                    <div style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--text-primary)' }}>
-                      {row.concept}
-                    </div>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', marginTop: 2 }}>
-                      {row.date}
-                    </div>
-                  </td>
-                  <td className={`amount ${esIngreso ? 'amount-income' : 'amount-expense'}`}>
-                    {esIngreso ? '+' : '-'}{formatEUR(esIngreso ? row.base_amount : row.total_amount)}
-                  </td>
-                  <td style={{ textAlign: 'right' }}>
-                    <EstadoBadge estado={row.status} esIngreso={esIngreso} />
-                  </td>
-                </tr>
-              ))}
+              {rows.map(row => {
+                const isIncome = row.type === 'income';
+
+                return (
+                  <tr key={row.id}>
+                    <td>
+                      {isIncome ? (row.invoice_number || '—') : '—'}
+                    </td>
+                    <td>
+                      <div style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)' }}>
+                        {row.concept}
+                      </div>
+                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
+                        {row.date}
+                      </div>
+                    </td>
+
+                    <td>
+                      <span className={`badge ${isIncome ? 'badge-success' : 'badge-error'}`}>
+                        {isIncome ? 'Ingreso' : 'Gasto'}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <StatusBadge status={row.status} isIncome={isIncome} />
+                    </td>
+                    <td className={`amount ${isIncome ? 'amount-income' : 'amount-expense'}`}>
+                      {isIncome ? '+' : '-'}{formatEUR(row.amount)}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -326,20 +337,20 @@ function MovementsTable({ title, rows, tipo, verTodosHref }) {
 }
 
 // Badge de estado según el valor de la BD
-function EstadoBadge({ estado, esIngreso }) {
-  // Mapeo de estados de la BD a clases badge del sistema CSS
-  const mapa = {
-    cobrado: { clase: 'badge-success', label: 'Cobrado' },
-    pagado: { clase: 'badge-success', label: 'Pagado' },
-    pendiente: { clase: 'badge-warning', label: 'Pendiente' },
-    borrador: { clase: 'badge-neutral', label: 'Borrador' },
+function StatusBadge({ status, isIncome }) {
+  // Map database status values to badge classes
+  const statusMap = {
+    cobrado: { badgeClass: 'badge-success', label: 'Cobrado' },
+    pagado: { badgeClass: 'badge-success', label: 'Pagado' },
+    pendiente: { badgeClass: 'badge-warning', label: 'Pendiente' },
+    borrador: { badgeClass: 'badge-neutral', label: 'Borrador' },
   };
 
-  const fallback = esIngreso
-    ? { clase: 'badge-success', label: 'Cobrado' }
-    : { clase: 'badge-success', label: 'Pagado' };
+  const fallback = isIncome
+    ? { badgeClass: 'badge-success', label: 'Cobrado' }
+    : { badgeClass: 'badge-success', label: 'Pagado' };
 
-  const { clase, label } = mapa[estado] ?? fallback;
+  const { badgeClass, label } = statusMap[status] ?? fallback;
 
-  return <span className={`badge ${clase}`}>{label}</span>;
+  return <span className={`badge ${badgeClass}`}>{label}</span>;
 }

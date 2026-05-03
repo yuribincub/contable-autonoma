@@ -53,46 +53,45 @@ export function useDashboard(session) {
 
   // ── Alertas fiscales dinámicas ──────────────────────────────────────────
   // Fechas de vencimiento por trimestre (siempre el 20 del mes siguiente al cierre)
-  const VENCIMIENTOS = {
-    1: { mes: 4, dia: 20, label: '20 abr' },
-    2: { mes: 7, dia: 20, label: '20 jul' },
-    3: { mes: 10, dia: 20, label: '20 oct' },
-    4: { mes: 1, dia: 30, label: '30 ene' }, // Q4 vence en enero del año siguiente
+  const DUE_DATES = {
+    1: { month: 4, day: 20, label: '20 abr' },
+    2: { month: 7, day: 20, label: '20 jul' },
+    3: { month: 10, day: 20, label: '20 oct' },
+    4: { month: 1, day: 30, label: '30 ene' }, // Q4 due in January of the next year
   };
 
-  const calcularDias = (quarter, year) => {
-    const v = VENCIMIENTOS[quarter];
-    const anioVencimiento = quarter === 4 ? year + 1 : year;
-    const fechaVencimiento = new Date(anioVencimiento, v.mes - 1, v.dia);
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-    const diff = Math.ceil((fechaVencimiento - hoy) / (1000 * 60 * 60 * 24));
+  const calculateDays = (quarter, year) => {
+    const due = DUE_DATES[quarter];
+    const dueYear = quarter === 4 ? year + 1 : year;
+    const dueDate = new Date(dueYear, due.month - 1, due.day);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diff = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
     return diff;
   };
 
-  const diasRestantes = calcularDias(selectedQuarter, selectedYear);
-  const labelVencimiento = VENCIMIENTOS[selectedQuarter].label;
+  const remainingDays = calculateDays(selectedQuarter, selectedYear);
+  const dueDateLabel = DUE_DATES[selectedQuarter].label;
 
-  // Solo mostrar alertas si el trimestre seleccionado es el actual o anterior
-  // y quedan menos de 30 días (o ya venció)
-  const mostrarAlertas = selectedQuarter === currentQuarter && diasRestantes <= 30;
+  // Only show alerts for the current quarter when there are 30 days or fewer left
+  const showAlerts = selectedQuarter === currentQuarter && remainingDays <= 30;
 
-  const fiscalAlerts = mostrarAlertas ? [
+  const fiscalAlerts = showAlerts ? [
     {
       id: 'modelo-130',
-      modelo: 'Modelo 130',
-      descripcion: `IRPF T${selectedQuarter} — ${formatEUR(irpf130)}`,
-      vencimiento: labelVencimiento,
-      dias: diasRestantes,
-      urgente: diasRestantes <= 7,
+      model: 'Modelo 130',
+      description: `IRPF T${selectedQuarter} — ${formatEUR(irpf130)}`,
+      dueDate: dueDateLabel,
+      days: remainingDays,
+      urgent: remainingDays <= 7,
     },
     {
       id: 'modelo-303',
-      modelo: 'Modelo 303',
-      descripcion: `IVA T${selectedQuarter} — ${formatEUR(Math.abs(vat303))} a compensar`,
-      vencimiento: labelVencimiento,
-      dias: diasRestantes,
-      urgente: diasRestantes <= 7,
+      model: 'Modelo 303',
+      description: `IVA T${selectedQuarter} — ${formatEUR(Math.abs(vat303))} a compensar`,
+      dueDate: dueDateLabel,
+      days: remainingDays,
+      urgent: remainingDays <= 7,
     },
   ] : [];
 
