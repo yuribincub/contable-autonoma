@@ -1,28 +1,9 @@
 /**
  * useInvoice.js
- * Carga el ingreso por ID y el perfil fiscal del autónomo desde Supabase.
+ * Carga el ingreso por ID y el perfil fiscal del autónomo usando la API del backend.
  *
- * Tabla Supabase necesaria: user_profile
- * SQL para crearla (ejecutar en Supabase → SQL Editor):
- * ─────────────────────────────────────────────────────
- * create table user_profile (
- *   id                   uuid primary key default gen_random_uuid(),
- *   user_id              uuid references auth.users(id) unique not null,
- *   full_name            text,
- *   nif                  text,
- *   address              text,
- *   city                 text,
- *   postal_code          text,
- *   province             text,
- *   phone                text,
- *   email                text,
- *   activity_description text,
- *   created_at           timestamptz default now()
- * );
- * alter table user_profile enable row level security;
- * create policy "Usuario ve su propio perfil"
- *   on user_profile for all using (auth.uid() = user_id);
- * ─────────────────────────────────────────────────────
+ * El backend expone /profile?user_id=xxx para cargar los datos fiscales sin hacer
+ * llamadas directas desde el frontend a Supabase.
  */
 
 import { useState, useEffect } from 'react';
@@ -50,25 +31,22 @@ export function useInvoice(session, incomeId) {
 
       const [incomeRes, profileRes] = await Promise.all([
         api.get(`/income/${incomeId}?user_id=${userId}`),
-        supabase.from('user_profile').select('*').eq('user_id', userId).single(),
+        api.get(`/profile?user_id=${userId}`),
       ]);
 
       setIncome(incomeRes.data);
 
-      if (profileRes.error) {
-        setProfile({
-          full_name: session.user.email.split('@')[0],
-          email: session.user.email,
-          nif: '— Configura tu perfil —',
-          address: '',
-          city: '',
-          postal_code: '',
-          province: '',
-          phone: '',
-        });
-      } else {
-        setProfile(profileRes.data);
-      }
+      const profileData = profileRes.data || {};
+      setProfile({
+        full_name: profileData.full_name || session.user.email.split('@')[0],
+        email: session.user.email,
+        nif: profileData.cif_nif || '— Configura tu perfil —',
+        address: profileData.address || '',
+        city: profileData.city || '',
+        postal_code: profileData.postal_code || '',
+        province: profileData.province || '',
+        phone: profileData.phone || '',
+      });
     } catch (err) {
       console.error('Error cargando factura:', err);
       setError('No se pudo cargar la factura.');
