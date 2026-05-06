@@ -29,7 +29,6 @@ export default function Dashboard({ session }) {
         profile,
     } = useDashboard(session);
 
-    console.log('profile desde hook:', profile);
     const profileIncomplete = !!(profile && (
         !profile.cif_nif?.trim() ||
         !profile.address?.trim() ||
@@ -42,7 +41,7 @@ export default function Dashboard({ session }) {
             {/* Cabecera de página */}
             <div className="page-header">
                 <div>
-                    <h2 className="page-title">Hola 👋</h2>
+                    <h2 className="page-title">Hola 👋, {profile?.full_name || 'Usuario'}</h2>
                     <p className="page-subtitle">
                         Resumen del T{selectedQuarter} {selectedYear}
                     </p>

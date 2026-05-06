@@ -20,8 +20,12 @@ export function useDashboard(session) {
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
+    fetchProfile();
+  }, [session?.user?.id]);
+
+  useEffect(() => {
     fetchData();
-  }, [selectedQuarter, selectedYear]);
+  }, [selectedQuarter, selectedYear, session?.user?.id]);
 
   const fetchProfile = async () => {
     try {
