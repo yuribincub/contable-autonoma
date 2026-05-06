@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
-//import { supabase } from '../config/supabase';
+import { supabase } from '../config/supabase';
 import api from '../config/api';
 
 export function useDashboard(session) {
@@ -17,9 +17,21 @@ export function useDashboard(session) {
   const [selectedQuarter, setSelectedQuarter] = useState(currentQuarter);
   const [selectedYear, setSelectedYear] = useState(currentYear);
 
+  const [profile, setProfile] = useState(null);
+
   useEffect(() => {
     fetchData();
   }, [selectedQuarter, selectedYear]);
+
+  const fetchProfile = async () => {
+    try {
+      const userId = session.user.id;
+      const res = await api.get(`/profile?user_id=${userId}`);
+      setProfile(res.data);
+    } catch (error) {
+      console.error('Error cargando perfil:', error);
+    }
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -28,6 +40,7 @@ export function useDashboard(session) {
       const [incomeRes, expensesRes] = await Promise.all([
         api.get(`/income?user_id=${userId}&quarter=${selectedQuarter}&year=${selectedYear}`),
         api.get(`/expenses?user_id=${userId}&quarter=${selectedQuarter}&year=${selectedYear}`),
+
       ]);
       setIncome(incomeRes.data);
       setExpenses(expensesRes.data);
@@ -106,6 +119,7 @@ export function useDashboard(session) {
     totals: { income: totalIncome, expenses: totalExpenses, profit },
     taxes: { irpf130, vat303 },
     fiscalAlerts,
+    profile,
   };
 }
 

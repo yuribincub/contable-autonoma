@@ -5,6 +5,7 @@
 
 import { useDashboard } from '../hooks/useDashboard';
 import AppLayout from '../components/AppLayout';
+import { ProfileAlert } from '../components/ProfileAlert';
 import {
     QuarterSelector,
     SummaryCards,
@@ -25,10 +26,18 @@ export default function Dashboard({ session }) {
         totals,
         taxes,
         fiscalAlerts,
+        profile,
     } = useDashboard(session);
 
+    console.log('profile desde hook:', profile);
+    const profileIncomplete = !!(profile && (
+        !profile.cif_nif?.trim() ||
+        !profile.address?.trim() ||
+        !profile.postal_code?.trim() ||
+        !profile.iban?.trim()
+    ));
     return (
-        <AppLayout session={session} currentPage="resumen">
+        <AppLayout session={session} currentPage="resumen" profileIncomplete={profileIncomplete}>
 
             {/* Cabecera de página */}
             <div className="page-header">
@@ -45,28 +54,30 @@ export default function Dashboard({ session }) {
                     onYearChange={setSelectedYear}
                 />
             </div>
+            {/* Alerta de perfil incompleto */}
+            <ProfileAlert profile={profile} /> {/* ← añadir */}
 
-            {/* Alertas fiscales — solo si hay */}
             {fiscalAlerts.length > 0 && <FiscalAlerts alerts={fiscalAlerts} />}
-
             {/* Skeleton mientras carga */}
-            {loading ? (
-                <div className="grid-metrics">
-                    {[1, 2, 3, 4].map(i => (
-                        <div key={i} className="card">
-                            <div className="skeleton skeleton-text" style={{ width: '40%', marginBottom: 12 }} />
-                            <div className="skeleton skeleton-amount" />
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                <>
-                    <SummaryCards totals={totals} />
-                    <TaxCards taxes={taxes} quarter={selectedQuarter} year={selectedYear} />
-                    <MovementsGrid income={income} expenses={expenses} title="Últimos movimientos" />
-                </>
-            )}
+            {
+                loading ? (
+                    <div className="grid-metrics">
+                        {[1, 2, 3, 4].map(i => (
+                            <div key={i} className="card">
+                                <div className="skeleton skeleton-text" style={{ width: '40%', marginBottom: 12 }} />
+                                <div className="skeleton skeleton-amount" />
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <>
+                        <SummaryCards totals={totals} />
+                        <TaxCards taxes={taxes} quarter={selectedQuarter} year={selectedYear} />
+                        <MovementsGrid income={income} expenses={expenses} title="Últimos movimientos" />
+                    </>
+                )
+            }
 
-        </AppLayout>
+        </AppLayout >
     );
 }

@@ -17,6 +17,7 @@ import IncomeForm from './pages/IncomeForm';
 import ExpenseForm from './pages/ExpenseForm';
 import Movements from './pages/Movements';
 import InvoiceView from './pages/InvoiceView';
+import Profile from './pages/Profile';
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -52,9 +53,13 @@ export default function App() {
         {/* Ingresos y gastos */}
         <Route path="/income" element={<IncomeForm session={session} />} />
         <Route path="/expenses" element={<ExpenseForm session={session} />} />
+        <Route path="/invoice/:id" element={<InvoiceView session={session} />} />
+
 
         <Route path="/movements" element={<Movements session={session} />} />
-        <Route path="/invoice/:id" element={<InvoiceView session={session} />} />
+        <Route path="/perfil" element={<Profile session={session} />} />  {/* ← añadir */}
+
+
         {/* Rutas futuras — descomenta cuando estén listas */}
         {/* <Route path="/clients"   element={<Clients   session={session} />} /> */}
         {/* <Route path="/suppliers" element={<Suppliers session={session} />} /> */}
