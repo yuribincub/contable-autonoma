@@ -350,8 +350,13 @@
   gap: var(--space-6);
 }
 
-.stack-sm { gap: var(--space-4); }
-.stack-lg { gap: var(--space-8); }
+.stack-sm {
+  gap: var(--space-4);
+}
+
+.stack-lg {
+  gap: var(--space-8);
+}
 
 
 /* ===========================================================
@@ -385,14 +390,24 @@
    RESPONSIVE — Mobile first
    =========================================================== */
 
-/* Tablet: ≤ 1024px */
-@media (max-width: 1024px) {
+/* ── Tablet intermedio: 769px – 1024px ──────────────────────
+   Sidebar colapsado a solo iconos (64px). Siempre visible,
+   nunca se convierte en drawer. El texto desaparece.
+   ────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) and (min-width: 769px) {
   :root {
     --sidebar-width: 64px;
   }
 
+  /* Asegura que el sidebar nunca se oculte en este rango,
+     aunque el JS haya puesto la clase .open por error */
+  .sidebar {
+    transform: none !important;
+  }
+
+  /* Ocultar todo el texto del sidebar */
   .sidebar-brand-name,
-  .nav-item span,
+  .nav-item span:not(.nav-item-icon),
   .sidebar-section-label,
   .sidebar-user-name,
   .sidebar-user-email,
@@ -400,11 +415,13 @@
     display: none;
   }
 
+  /* Centrar logo */
   .sidebar-brand {
     justify-content: center;
     padding: var(--space-4);
   }
 
+  /* Centrar cada ítem de nav */
   .nav-item {
     justify-content: center;
     padding: var(--space-3);
@@ -415,10 +432,12 @@
     height: 22px;
   }
 
+  /* Centrar el avatar/usuario del footer */
   .sidebar-user {
     justify-content: center;
   }
 
+  /* Grids adaptados a pantalla más estrecha */
   .grid-dashboard {
     grid-template-columns: 1fr;
   }
@@ -428,14 +447,17 @@
   }
 }
 
-/* Mobile: ≤ 768px */
+/* ── Mobile: ≤ 768px ────────────────────────────────────────
+   Sidebar se oculta y aparece como drawer lateral.
+   El botón hamburguesa (topbar) lo controla.
+   ────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   :root {
     --topbar-height: 52px;
     --content-padding: var(--space-4);
   }
 
-  /* El sidebar se oculta y aparece como drawer */
+  /* Sidebar oculto por defecto — se muestra como drawer */
   .sidebar {
     transform: translateX(-100%);
     width: var(--sidebar-width-original, 240px);
@@ -446,7 +468,7 @@
     transform: translateX(0);
   }
 
-  /* Overlay del drawer */
+  /* Overlay oscuro detrás del drawer */
   .sidebar-overlay {
     display: none;
     position: fixed;
@@ -460,6 +482,7 @@
     display: block;
   }
 
+  /* Restaurar textos dentro del drawer abierto */
   .sidebar .sidebar-brand-name,
   .sidebar .nav-item span,
   .sidebar .sidebar-section-label,
@@ -469,15 +492,24 @@
     display: flex;
   }
 
+  /* Logo alineado a la izquierda cuando el drawer está abierto */
+  .sidebar.open .sidebar-brand {
+    justify-content: flex-start;
+    padding: var(--space-5);
+  }
+
+  /* Ítems de nav alineados a la izquierda en el drawer */
   .sidebar .nav-item {
     justify-content: flex-start;
     padding: var(--space-2) var(--space-3);
   }
 
+  /* El contenido ocupa todo el ancho (sin sidebar fijo) */
   .main-content {
     margin-left: 0;
   }
 
+  /* Mostrar botón hamburguesa */
   .btn-menu {
     display: flex;
   }
@@ -506,7 +538,7 @@
     justify-content: center;
   }
 
-  /* Métricas */
+  /* Métricas en 2 columnas */
   .grid-metrics {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-3);
@@ -537,13 +569,15 @@
     border-radius: var(--radius-sm);
   }
 
-  /* Hide columnas secundarias en tabla mobile */
+  /* Ocultar columnas secundarias en tabla mobile */
   .table .hide-mobile {
     display: none;
   }
 }
 
-/* Mobile pequeño: ≤ 480px */
+/* ── Mobile pequeño: ≤ 480px ────────────────────────────────
+   Ajustes finos para pantallas muy pequeñas.
+   ────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .grid-metrics {
     grid-template-columns: 1fr 1fr;
