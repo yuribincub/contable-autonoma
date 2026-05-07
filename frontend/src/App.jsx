@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { supabase } from './config/supabase';
 
 // Páginas
@@ -18,6 +18,7 @@ import ExpenseForm from './pages/ExpenseForm';
 import Movements from './pages/Movements';
 import InvoiceView from './pages/InvoiceView';
 import Profile from './pages/Profile';
+import NotFound from './pages/NotFound';
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -65,8 +66,8 @@ export default function App() {
         {/* <Route path="/suppliers" element={<Suppliers session={session} />} /> */}
         {/* <Route path="/taxes"     element={<Taxes     session={session} />} /> */}
 
-        {/* Cualquier ruta desconocida → dashboard */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* Cualquier ruta desconocida → página 404 */}
+        <Route path="*" element={<NotFound session={session} />} />
       </Routes>
     </BrowserRouter>
   );
