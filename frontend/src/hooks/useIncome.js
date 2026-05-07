@@ -1,34 +1,47 @@
 /**
- * useIncome.js
+ * src/hooks/useIncome.js
  * Hook con toda la lógica del formulario de ingresos.
  * IncomeForm.jsx solo pinta — no calcula ni hace fetch.
+ *
+ * Cambios respecto a la versión anterior:
+ *   - Añadido estado `client` para el cliente seleccionado
+ *   - vat_rate se deriva automáticamente de client.is_non_eu
+ *   - Se elimina client: 'Cliente EEUU' hardcodeado
+ *   - Se guarda client_id y vat_rate en el POST /income
  */
 
 import { useState } from 'react';
 import api from '../config/api';
 
 const INITIAL_FORM = {
-  date:        '',
-  concept:     '',
+  date: '',
+  concept: '',
   base_amount: '',
-  irpf_rate:   0,
+  irpf_rate: 0,
 };
 
 export function useIncome(session) {
-  const [form,           setForm]           = useState(INITIAL_FORM);
-  const [file,           setFile]           = useState(null);
-  const [loading,        setLoading]        = useState(false);
-  const [ocrLoading,     setOcrLoading]     = useState(false);
-  const [ocrStep,        setOcrStep]        = useState('');
-  const [ocrDone,        setOcrDone]        = useState(false);
-  const [ocrWarning,     setOcrWarning]     = useState(null);
-  const [error,          setError]          = useState(null);
-  const [success,        setSuccess]        = useState(false);
+  const [form, setForm] = useState(INITIAL_FORM);
+  const [client, setClient] = useState(null); // { client_id, client_name, vat_rate, is_non_eu }
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [ocrLoading, setOcrLoading] = useState(false);
+  const [ocrStep, setOcrStep] = useState('');
+  const [ocrDone, setOcrDone] = useState(false);
+  const [ocrWarning, setOcrWarning] = useState(null);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
   // ── Cambios en el formulario ───────────────────────────────────────────
   const handleChange = (e) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  // ── Cambio de cliente (viene de ClientSelector) ────────────────────────
+  // client = { client_id, client_name, vat_rate, is_non_eu } | null
+  const handleClientChange = (selectedClient) => {
+    setClient(selectedClient);
   };
 
   // ── OCR — procesar transferencia ───────────────────────────────────────
@@ -60,9 +73,9 @@ export function useIncome(session) {
 
       setForm(prev => ({
         ...prev,
-        date:        data.date    || prev.date,
-        base_amount: data.amount  || prev.base_amount,
-        concept:     data.concept || prev.concept,
+        date: data.date || prev.date,
+        base_amount: data.amount || prev.base_amount,
+        concept: data.concept || prev.concept,
       }));
 
       if (!data.date || !data.amount) {
@@ -100,14 +113,19 @@ export function useIncome(session) {
         uploadedFileUrl = data.file_url;
       }
 
+      // vat_rate viene del cliente seleccionado (0 si extracomunitario, 21 si UE/nacional)
+      const vatRate = client ? client.vat_rate : 0;
+
       const response = await api.post('/income', {
-        user_id:     session.user.id,
-        date:        form.date,
-        concept:     form.concept,
+        user_id: session.user.id,
+        date: form.date,
+        concept: form.concept,
         base_amount: Number(form.base_amount),
-        irpf_rate:   Number(form.irpf_rate),
-        client:      'Cliente EEUU',
-        file_url:    uploadedFileUrl,
+        irpf_rate: Number(form.irpf_rate),
+        vat_rate: vatRate,
+        client_id: client?.client_id ?? null,
+        client_name: client?.client_name ?? null,
+        file_url: uploadedFileUrl,
       });
 
       const invoiceNum = response.data.invoice_number;
@@ -115,6 +133,7 @@ export function useIncome(session) {
       setSuccessMessage(`Factura ${invoiceNum} guardada correctamente`);
       setTimeout(() => { window.location.href = '/'; }, 2000);
       setForm(INITIAL_FORM);
+      setClient(null);
 
     } catch (err) {
       setError(err.response?.data?.error || 'Error al guardar el ingreso');
@@ -124,16 +143,20 @@ export function useIncome(session) {
   };
 
   // ── Cálculos en tiempo real ────────────────────────────────────────────
-  const baseAmount   = Number(form.base_amount) || 0;
-  const irpfAmount   = (baseAmount * Number(form.irpf_rate)) / 100;
-  const totalCobrar  = baseAmount - irpfAmount;
+  const baseAmount = Number(form.base_amount) || 0;
+  const vatRate = client ? client.vat_rate : 0;
+  const vatAmount = (baseAmount * vatRate) / 100;
+  const irpfAmount = (baseAmount * Number(form.irpf_rate)) / 100;
+  const totalCobrar = baseAmount + vatAmount - irpfAmount;
 
   const isFormValid = form.date && form.concept && form.base_amount;
 
   return {
     form,
+    client,
     file,
     handleChange,
+    handleClientChange,
     handleFileChange,
     handleSubmit,
     isFormValid,
@@ -148,6 +171,6 @@ export function useIncome(session) {
     success,
     successMessage,
 
-    calc: { baseAmount, irpfAmount, totalCobrar },
+    calc: { baseAmount, vatRate, vatAmount, irpfAmount, totalCobrar },
   };
 }

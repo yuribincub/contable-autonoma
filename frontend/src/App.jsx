@@ -19,6 +19,7 @@ import Movements from './pages/Movements';
 import InvoiceView from './pages/InvoiceView';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
+import Clients from './pages/Clients';
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -56,13 +57,11 @@ export default function App() {
         <Route path="/expenses" element={<ExpenseForm session={session} />} />
         <Route path="/invoice/:id" element={<InvoiceView session={session} />} />
 
-
         <Route path="/movements" element={<Movements session={session} />} />
         <Route path="/perfil" element={<Profile session={session} />} />  {/* ← añadir */}
-
+        <Route path="/clients" element={<Clients session={session} />} />
 
         {/* Rutas futuras — descomenta cuando estén listas */}
-        {/* <Route path="/clients"   element={<Clients   session={session} />} /> */}
         {/* <Route path="/suppliers" element={<Suppliers session={session} />} /> */}
         {/* <Route path="/taxes"     element={<Taxes     session={session} />} /> */}
 
