@@ -23,16 +23,23 @@ export function getVatLabel(client) {
 // ─── Hook ─────────────────────────────────────────────────────────────────
 
 export function useClients(session) {
+    const userId = session?.user?.id;
     const [clients, setClients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     // ── Fetch todos los clientes activos ──────────────────────────────────
     const fetchClients = useCallback(async () => {
+        if (!userId) {
+            setClients([]);
+            setLoading(false);
+            return;
+        }
+
         setLoading(true);
         setError(null);
         try {
-            const { data } = await api.get('/clients');
+            const { data } = await api.get('/clients', { params: { user_id: userId } });
             setClients(data.data ?? []);
         } catch (err) {
             console.error('[useClients.fetchClients]', err.response?.data || err.message);
@@ -40,7 +47,7 @@ export function useClients(session) {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [userId]);
 
     useEffect(() => { fetchClients(); }, [fetchClients]);
 
@@ -48,7 +55,7 @@ export function useClients(session) {
     async function createClient(formData) {
         const { data } = await api.post('/clients', {
             ...formData,
-            user_id: session.user.id,
+            user_id: userId,
         });
         setClients(prev => [data.data, ...prev]);
         return data.data;
@@ -56,14 +63,17 @@ export function useClients(session) {
 
     // ── Actualizar ─────────────────────────────────────────────────────────
     async function updateClient(id, formData) {
-        const { data } = await api.put(`/clients/${id}`, formData);
+        const { data } = await api.put(`/clients/${id}`, {
+            user_id: userId,
+            ...formData,
+        });
         setClients(prev => prev.map(c => c.id === id ? data.data : c));
         return data.data;
     }
 
     // ── Soft delete ────────────────────────────────────────────────────────
     async function deleteClient(id) {
-        await api.delete(`/clients/${id}`);
+        await api.delete(`/clients/${id}`, { data: { user_id: userId } });
         setClients(prev => prev.filter(c => c.id !== id));
     }
 
